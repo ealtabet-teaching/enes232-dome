@@ -2,7 +2,7 @@
 <!--
   The download page students are sent to, served by GitHub Pages from the public release
   repository (https://ealtabet-teaching.github.io/enes232-dome/). The release workflow copies
-  this file there. It shows one installer, for the computer it is opened on, and the MATLAB
+  this folder there, with the manual (manual/, made by npm run manual). It shows one installer, for the computer it is opened on, and the MATLAB
   toolbox. The links use the fixed names tools/release.mjs gives the files, under
   releases/latest/download/, so they always reach the newest published release and never a
   draft. ?os=mac, ?os=windows or ?os=linux shows another system's installer.
@@ -105,7 +105,7 @@
     Opening the file in MATLAB (R2019b or later) installs it.
   </p>
 </main>
-<footer>ENES232 Thermodynamics · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
+<footer>ENES232 Thermodynamics · <a href="manual/index.html">Manual</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
 
 <script>
 (function () {
@@ -127,8 +127,9 @@
       name: 'Windows', file: 'Dome-Windows-setup.exe', needs: 'Windows 10 or 11',
       steps: [
         'Run <code>Dome-Windows-setup.exe</code>.',
-        'First launch: when SmartScreen shows “Windows protected your PC”, select More info, then Run anyway. ' +
-          'The installer is not signed with a paid certificate.'
+        'When SmartScreen shows “Windows protected your PC”, select More info, then Run anyway. ' +
+          'The installer is not signed with a paid certificate.',
+        'Open Dome from the Start menu.'
       ]
     },
     linux: {

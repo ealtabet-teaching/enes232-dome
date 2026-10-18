@@ -1,0 +1,154 @@
+/* The Dome manual. Colours, type and radii follow the download page (download/index.html). */
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --ink: #101828; --muted: #475467; --line: #d0d5dd;
+  --accent: #0f766e; --accent-ink: #ffffff; --accent-hover: #0b5f59; --tint: #e6f4f1;
+  --code-bg: #f2f4f7; --bubble: #101828; --bubble-ink: #ffffff;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c111d; --card: #161b26; --ink: #f2f4f7; --muted: #a4abb8; --line: #333a47;
+    --accent: #2dd4bf; --accent-ink: #042f2e; --accent-hover: #5eead4; --tint: #12302d;
+    --code-bg: #1f2633; --bubble: #f2f4f7; --bubble-ink: #101828;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.6 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+a { color: var(--accent); }
+a:hover { color: var(--accent-hover); }
+a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+code, kbd, pre { font: .9em ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+code { background: var(--code-bg); padding: .08em .3em; border-radius: 4px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 .3em; background: var(--card); }
+pre { background: var(--code-bg); border-radius: 10px; padding: .85rem 1rem; overflow-x: auto; line-height: 1.5; }
+pre code { background: none; padding: 0; }
+
+/* ---------- header, pager, footer ---------- */
+header.site {
+  display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+  max-width: 1232px; margin: 0 auto; padding: 1rem 16px .5rem;
+}
+.brand { display: inline-flex; align-items: center; gap: .5rem; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 1.15rem; }
+.brand svg { width: 34px; height: 34px; }
+.section { color: var(--muted); border-left: 1px solid var(--line); padding-left: .75rem; }
+header.site nav { margin-left: auto; display: flex; gap: 1rem; }
+header.site nav a { text-decoration: none; font-weight: 500; }
+header.site nav a[aria-current] { color: var(--ink); }
+
+.page {
+  max-width: 1232px; margin: .5rem auto 0; padding: 2rem 16px 2.5rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+}
+@media (max-width: 1264px) { .page { margin-inline: 16px; } }
+@media (max-width: 600px) { .page { margin-inline: 8px; padding: 1.25rem 12px 1.5rem; border-radius: 12px; } }
+/* text sits in a reading column; shots may use the full width */
+.page > :not(figure.shot) { max-width: 46rem; margin-left: auto; margin-right: auto; }
+h1 { font-size: 2rem; line-height: 1.2; letter-spacing: -.01em; margin-top: 0; margin-bottom: 1rem; }
+h2 { font-size: 1.4rem; line-height: 1.3; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+h3 { font-size: 1.1rem; margin-top: 1.75rem; }
+.lede { color: var(--muted); font-size: 1.1rem; }
+.steps { background: var(--tint); border-radius: 10px; padding: 1rem 1.25rem 1rem 2.5rem; }
+.steps li + li { margin-top: .35rem; }
+.note { border-left: 3px solid var(--accent); padding: .25rem 0 .25rem 1rem; color: var(--muted); }
+table.plain { border-collapse: collapse; width: 100%; font-size: .95rem; }
+table.plain th, table.plain td { text-align: left; vertical-align: top; padding: .45rem .6rem; border-bottom: 1px solid var(--line); }
+.toc { padding-left: 1.5rem; }
+.toc li { margin: .4rem 0; }
+.toc li span { display: block; color: var(--muted); font-size: .95rem; }
+
+.pager { display: flex; justify-content: space-between; gap: 1rem; max-width: 1232px; margin: 1.25rem auto 0; padding: 0 16px; }
+.pager a { display: flex; flex-direction: column; text-decoration: none; padding: .7rem 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); max-width: 48%; }
+.pager a span { color: var(--muted); font-size: .85rem; }
+.pager .next { text-align: right; margin-left: auto; }
+footer.site { max-width: 1232px; margin: 1.5rem auto 2rem; padding: 0 16px; color: var(--muted); font-size: .85rem; text-align: center; }
+
+/* ---------- annotated screenshots ----------
+   Narrow first: the image with numbered markers around it, and the legend. From a width set per
+   shot (classes wl, wm, ws) the frame is drawn at its reference proportions with the bubbles and
+   arrows; every size in it is in container units (--u), so it scales as one drawing. */
+figure.shot { margin: 1.75rem auto; width: 100%; max-width: var(--nwpx); container-type: inline-size; }
+figure.shot .frame { position: relative; padding: 20px; }
+figure.shot .img { position: relative; display: block; }
+figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+figure.shot.plain .img img { border-radius: 10px; }
+.mks { position: absolute; inset: 0; pointer-events: none; }
+.mk {
+  position: absolute; display: flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%; font: 600 11px/1 system-ui, sans-serif;
+  background: var(--accent); color: var(--accent-ink); box-shadow: 0 0 0 2px var(--card);
+}
+/* each marker sits wholly outside its target, 3px from the edge it points at */
+.mk.left { transform: translate(calc(-100% - 3px), -50%); }
+.mk.right { transform: translate(3px, -50%); }
+.mk.top { transform: translate(-50%, calc(-100% - 3px)); }
+.mk.bottom { transform: translate(-50%, 3px); }
+.leaders, .bubs { display: none; }
+/* below 500px the markers would cover the controls they label: the image and the numbered legend only */
+@media (max-width: 499.98px) { .mks { display: none; } figure.shot .frame { padding: 0; } }
+figcaption { color: var(--muted); font-size: .95rem; max-width: 46rem; margin: .25rem auto 0; padding: 0 4px; }
+figcaption p { margin: 0 0 .5rem; }
+.legend { margin: 0; padding-left: 1.75rem; }
+.legend li { margin: .2rem 0; }
+.legend li::marker { color: var(--accent); font-weight: 700; }
+.legend b { color: var(--ink); font-weight: 600; }
+
+@media (min-width: 1040px) { figure.shot.wl { max-width: var(--fwpx); } }
+@media (min-width: 760px) { figure.shot.wm { max-width: var(--fwpx); } }
+@media (min-width: 560px) { figure.shot.ws { max-width: var(--fwpx); } }
+/* the wide drawing, shared by all three classes */
+@media (min-width: 560px) {
+  figure.shot .frame { --u: calc(100cqw / var(--fw)); }
+}
+@media (min-width: 1040px) {
+  figure.shot.wl .frame { padding: 0; aspect-ratio: var(--ar); }
+  figure.shot.wl .img { position: absolute; left: var(--il); top: var(--it); width: var(--iw); }
+  figure.shot.wl .leaders, figure.shot.wl .bubs { display: block; }
+  figure.shot.wl .mk { width: calc(20 * var(--u)); height: calc(20 * var(--u)); font-size: calc(11.5 * var(--u)); }
+}
+@media (min-width: 760px) {
+  figure.shot.wm .frame { padding: 0; aspect-ratio: var(--ar); }
+  figure.shot.wm .img { position: absolute; left: var(--il); top: var(--it); width: var(--iw); }
+  figure.shot.wm .leaders, figure.shot.wm .bubs { display: block; }
+  figure.shot.wm .mk { width: calc(20 * var(--u)); height: calc(20 * var(--u)); font-size: calc(11.5 * var(--u)); }
+}
+@media (min-width: 560px) {
+  figure.shot.ws .frame { padding: 0; aspect-ratio: var(--ar); }
+  figure.shot.ws .img { position: absolute; left: var(--il); top: var(--it); width: var(--iw); }
+  figure.shot.ws .leaders, figure.shot.ws .bubs { display: block; }
+  figure.shot.ws .mk { width: calc(20 * var(--u)); height: calc(20 * var(--u)); font-size: calc(11.5 * var(--u)); }
+}
+.leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+.leaders line { stroke: var(--accent); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.mks { z-index: 2; }
+.bubs { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.bub {
+  position: absolute; transform: translateY(-50%); width: calc(164 * var(--u));
+  display: flex; gap: calc(6 * var(--u)); align-items: flex-start;
+  padding: calc(6 * var(--u)) calc(8 * var(--u)); border-radius: calc(8 * var(--u));
+  background: var(--bubble); color: var(--bubble-ink);
+  font-size: calc(13 * var(--u)); line-height: 1.35; font-weight: 500;
+}
+.bub.left { left: calc(4 * var(--u)); }
+.bub.right { right: calc(4 * var(--u)); }
+.bub b {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: calc(18 * var(--u)); height: calc(18 * var(--u)); border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); font-size: calc(11 * var(--u));
+}
+
+/* ---------- the language reference, as the app renders it ---------- */
+.ref { font-size: .95rem; }
+.ref h3 { font-size: 1.05rem; margin: 1.5rem 0 .4rem; }
+.ref table { border-collapse: collapse; width: 100%; }
+.ref td { vertical-align: top; padding: .4rem .6rem; border-bottom: 1px solid var(--line); }
+.ref td:first-child { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .88rem; width: 38%; overflow-wrap: anywhere; color: var(--ink); }
+.ref pre { white-space: pre-wrap; }
+@media (max-width: 600px) {
+  .ref table, .ref tbody, .ref tr, .ref td { display: block; width: auto; }
+  .ref td:first-child { border-bottom: 0; padding-bottom: 0; }
+}
