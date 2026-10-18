@@ -1,0 +1,197 @@
+<!doctype html>
+<!--
+  The download page students are sent to, served by GitHub Pages from the public release
+  repository (https://ealtabet-teaching.github.io/enes232-dome/). The release workflow copies
+  this file there. It shows one installer, for the computer it is opened on, and the MATLAB
+  toolbox. The links use the fixed names tools/release.mjs gives the files, under
+  releases/latest/download/, so they always reach the newest published release and never a
+  draft. ?os=mac, ?os=windows or ?os=linux shows another system's installer.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dome for ENES232</title>
+<meta name="description" content="Download Dome, the thermodynamics workbench for ENES232, and its MATLAB toolbox.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #101828; --muted: #475467; --line: #d0d5dd;
+    --accent: #0f766e; --accent-ink: #ffffff; --accent-hover: #0b5f59; --tint: #e6f4f1;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c111d; --card: #161b26; --ink: #f2f4f7; --muted: #a4abb8; --line: #333a47;
+      --accent: #2dd4bf; --accent-ink: #042f2e; --accent-hover: #5eead4; --tint: #12302d;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.5 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main {
+    width: min(34rem, calc(100% - 32px)); margin: 12vh 0 2rem; padding: 2.5rem 2rem 2rem;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; text-align: center;
+  }
+  header svg { width: 72px; height: 72px; }
+  h1 { margin: .5rem 0 0; font-size: 1.9rem; letter-spacing: -.01em; }
+  .lede { margin: .25rem 0 2rem; color: var(--muted); }
+  .button {
+    display: inline-block; padding: .85rem 1.6rem; border-radius: 10px; font-weight: 600; font-size: 1.05rem;
+    background: var(--accent); color: var(--accent-ink); text-decoration: none;
+  }
+  .button:hover { background: var(--accent-hover); }
+  .button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .meta { margin: .6rem 0 0; color: var(--muted); font-size: .9rem; }
+  .steps {
+    margin: 1.75rem 0 0; padding: 1rem 1.25rem 1rem 2.5rem; text-align: left;
+    background: var(--tint); border-radius: 10px; font-size: .95rem;
+  }
+  .steps li + li { margin-top: .35rem; }
+  .updates { margin: 1rem 0 0; color: var(--muted); font-size: .9rem; }
+  .matlab { margin: 2rem 0 0; padding-top: 1.25rem; border-top: 1px solid var(--line); font-size: .95rem; }
+  .all { display: flex; flex-direction: column; gap: .6rem; align-items: center; }
+  .all .button { width: min(18rem, 100%); padding-inline: 1rem; white-space: nowrap; }
+  a { color: var(--accent); }
+  code { font: .9em ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  footer { margin: 0 16px 2rem; color: var(--muted); font-size: .85rem; }
+  [hidden] { display: none !important; }
+  @media (max-width: 480px) { main { margin-top: 6vh; padding: 2rem 1.25rem 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <svg viewBox="0 0 1024 1024" aria-hidden="true">
+      <rect x="64" y="64" width="896" height="896" rx="200" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="8"/>
+      <path d="M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800" fill="#E6F4F1" stroke="#101828" stroke-width="48" stroke-linecap="round"/>
+      <path d="M300 560 L 724 560" stroke="#0F766E" stroke-width="40" stroke-linecap="round"/>
+      <circle cx="512" cy="250" r="62" fill="#0F766E"/>
+    </svg>
+    <h1>Dome</h1>
+    <p class="lede">The thermodynamics workbench for ENES232</p>
+  </header>
+
+  <section id="one" hidden>
+    <a class="button" id="get" href="#">Download Dome</a>
+    <p class="meta" id="meta"></p>
+    <ol class="steps" id="steps"></ol>
+    <p class="updates">An installed copy offers each new version when it is published.</p>
+  </section>
+
+  <section id="any" hidden>
+    <p>Dome runs on macOS, Windows and Linux computers.</p>
+    <div class="all" id="all"></div>
+  </section>
+
+  <section id="none" hidden>
+    <p>Dome has no published release yet.</p>
+  </section>
+
+  <noscript>
+    <div class="all">
+      <a class="button" href="https://github.com/ealtabet-teaching/enes232-dome/releases/latest/download/Dome-macOS.dmg">Download Dome for macOS</a>
+      <a class="button" href="https://github.com/ealtabet-teaching/enes232-dome/releases/latest/download/Dome-Windows-setup.exe">Download Dome for Windows</a>
+      <a class="button" href="https://github.com/ealtabet-teaching/enes232-dome/releases/latest/download/Dome-Linux.AppImage">Download Dome for Linux</a>
+    </div>
+  </noscript>
+
+  <p class="matlab" id="matlab">
+    MATLAB toolbox: <a id="mltbx" href="https://github.com/ealtabet-teaching/enes232-dome/releases/latest/download/Dome.mltbx">Dome.mltbx</a>.
+    Opening the file in MATLAB (R2019b or later) installs it.
+  </p>
+</main>
+<footer>ENES232 Thermodynamics · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
+
+<script>
+(function () {
+  // owner/name of the release repository: from the Pages address, else the course's
+  var host = location.hostname, first = location.pathname.split('/').filter(Boolean)[0];
+  var REPO = /\.github\.io$/.test(host) && first ? host.split('.')[0] + '/' + first : 'ealtabet-teaching/enes232-dome';
+  var BASE = 'https://github.com/' + REPO + '/releases/latest/download/';
+
+  var SYSTEMS = {
+    mac: {
+      name: 'macOS', file: 'Dome-macOS.dmg', needs: 'macOS 11 or later, Apple silicon or Intel',
+      steps: [
+        'Open <code>Dome-macOS.dmg</code> and drag Dome to Applications.',
+        'First launch: macOS blocks Dome once, because the app is not notarized by Apple. ' +
+          'Select Open Anyway in System Settings › Privacy &amp; Security, then open Dome again.'
+      ]
+    },
+    windows: {
+      name: 'Windows', file: 'Dome-Windows-setup.exe', needs: 'Windows 10 or 11',
+      steps: [
+        'Run <code>Dome-Windows-setup.exe</code>.',
+        'First launch: when SmartScreen shows “Windows protected your PC”, select More info, then Run anyway. ' +
+          'The installer is not signed with a paid certificate.'
+      ]
+    },
+    linux: {
+      name: 'Linux', file: 'Dome-Linux.AppImage', needs: 'Linux on x86-64',
+      steps: [
+        'Make the file executable: <code>chmod +x Dome-Linux.AppImage</code>',
+        'Run it: <code>./Dome-Linux.AppImage</code>'
+      ]
+    }
+  };
+
+  function detect() {
+    var asked = new URLSearchParams(location.search).get('os');
+    if (asked && SYSTEMS[asked]) return asked;
+    var ua = navigator.userAgent, p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+    if (/Android|iPhone|iPad|iPod|CrOS/i.test(ua) || /Android|iOS|Chrome OS/i.test(p)) return null;
+    if (/Mac/i.test(p) || /Macintosh/.test(ua)) return navigator.maxTouchPoints > 1 ? null : 'mac';   // an iPad asks as a Mac
+    if (/Win/i.test(p) || /Windows/.test(ua)) return 'windows';
+    if (/Linux/i.test(p) || /Linux|X11/.test(ua)) return 'linux';
+    return null;
+  }
+
+  function show(version, files) {
+    var os = detect();
+    var has = function (f) { return !files || files.indexOf(f) >= 0; };
+    if (os && has(SYSTEMS[os].file)) {
+      var s = SYSTEMS[os];
+      var get = document.getElementById('get');
+      get.href = BASE + s.file;
+      get.textContent = 'Download Dome for ' + s.name;
+      document.getElementById('meta').textContent = (version ? 'Version ' + version + ' · ' : '') + s.needs;
+      document.getElementById('steps').innerHTML = s.steps.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+      document.getElementById('one').hidden = false;
+    } else {
+      var all = document.getElementById('all');
+      Object.keys(SYSTEMS).forEach(function (k) {
+        if (!has(SYSTEMS[k].file)) return;
+        var a = document.createElement('a');
+        a.className = 'button'; a.href = BASE + SYSTEMS[k].file; a.textContent = 'Download Dome for ' + SYSTEMS[k].name;
+        all.appendChild(a);
+      });
+      document.getElementById('any').hidden = false;
+    }
+    document.getElementById('mltbx').href = BASE + 'Dome.mltbx';
+    document.getElementById('matlab').hidden = !has('Dome.mltbx');
+  }
+
+  // The newest published release: its version, and which files it holds. Without an answer
+  // (offline, or GitHub's limit of 60 questions an hour from one network), the links still work.
+  fetch('https://api.github.com/repos/' + REPO + '/releases/latest', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) {
+      if (r.status === 404) {
+        document.getElementById('none').hidden = false;
+        document.getElementById('matlab').hidden = true;
+        return null;
+      }
+      if (!r.ok) throw new Error(r.status);
+      return r.json().then(function (rel) {
+        show(String(rel.tag_name || '').replace(/^dome-v/, ''), (rel.assets || []).map(function (a) { return a.name; }));
+      });
+    })
+    .catch(function () { show('', null); });
+})();
+</script>
+</body>
+</html>
