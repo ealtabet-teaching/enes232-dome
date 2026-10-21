@@ -28,7 +28,7 @@ W = p * (V_2 - V_1)
 T_2 / T_1 = V_2 / V_1</code></pre>
 <ul>
   <li><strong>Equations.</strong> <code>a = b</code> in any arrangement. Dome matches equations to unknowns, evaluates the explicit ones directly and solves the rest by iteration. Equations that repeat each other, contradict each other or leave a variable undetermined are reported on their line.</li>
-  <li><strong>Units.</strong> A unit follows a number in square brackets. Everything after a slash is in the denominator, so <code>[kJ/kg·K]</code> is kJ/(kg·K); <code>*</code>, <code>^</code> and parentheses also work. Values are converted to SI on entry, so bar, kPa, L and kJ can be mixed. A number without a unit where one is needed is an error.</li>
+  <li><strong>Units.</strong> A unit follows a number in square brackets. Everything after a slash is in the denominator, so <code>[kJ/kg·K]</code> is kJ/(kg·K); <code>*</code>, <code>^</code> and parentheses also work. Values are converted to SI on entry, so bar, kPa, L and kJ can be mixed. A number without a unit where one is needed is an error, except 0, which is zero in any unit: a balance can be written as the book writes it, <code>0 = Q - W + mdot*(h_1 - h_2)</code>, and W takes the unit of the other terms. A 0 set equal to a temperature still needs a unit, since 0 °C and 0 K differ.</li>
   <li><strong>Unit conversion.</strong> Dividing by a unit gives a plain number in that unit: <code>p_kPa = p / (1 [kPa])</code>.</li>
   <li><strong>Values shown.</strong> SI or English in the header sets the units results are shown in.</li>
 </ul>
