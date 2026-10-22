@@ -148,6 +148,7 @@ figcaption p { margin: 0 0 .5rem; }
 .ref td { vertical-align: top; padding: .4rem .6rem; border-bottom: 1px solid var(--line); }
 .ref td:first-child { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .88rem; width: 38%; overflow-wrap: anywhere; color: var(--ink); }
 .ref pre { white-space: pre-wrap; }
+.ref .nb { white-space: nowrap; }
 @media (max-width: 600px) {
   .ref table, .ref tbody, .ref tr, .ref td { display: block; width: auto; }
   .ref td:first-child { border-bottom: 0; padding-bottom: 0; }

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sweeps · Dome manual</title>
-<meta name="description" content="Running a sheet over a range of one input: the sweep, record and plot lines, the slider, the chart and the table of runs.">
+<meta name="description" content="Running a sheet over a range of one or two inputs: the sweep, record and plot lines, families of curves, the sliders, the chart and the table of runs.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="manual.css">
 </head>
@@ -17,7 +17,7 @@
 </header>
 <main class="page">
 <h1>Sweeps</h1>
-<p class="lede">A sweep runs the sheet once for each value of one input and collects chosen results from every run. The sixth example, Help › Examples › Sweeps, runs the Rankine cycle of the third example for turbine inlet temperatures from 400 °C to 600 °C. It opens in the Sweep view and runs.</p>
+<p class="lede">A sweep runs the sheet once for each value of one input, or for each combination of the values of two, and collects chosen results from every run. The sixth example, Help › Examples › Sweeps, runs the Rankine cycle of the third example for turbine inlet temperatures from 400 °C to 600 °C. It opens in the Sweep view and runs.</p>
 
 <h2>The sweep lines</h2>
 <p>The sweep is written in its own editor in the Sweep view; the sheet stays as it is.</p>
@@ -48,8 +48,15 @@ plot x_2 vs T_1</code></pre>
   </ol></figcaption>
 </figure>
 
+<h2>Families of curves</h2>
+<p>A second sweep line runs the sheet for every combination of the two swept variables. Each plot line is drawn against one of them, with one curve for each value of the other. For the cold air-standard Otto cycle, whose thermal efficiency is <code>eta = 1 - r^(1 - k)</code>:</p>
+<pre><code>sweep r = 2:1:12
+sweep k = 1.3, 1.35, 1.4
+plot eta vs r</code></pre>
+<p>draws three curves of eta against r, one for each k, with a legend reading <code>k = 1.3</code>, <code>k = 1.35</code> and <code>k = 1.4</code>; <code>plot eta vs k</code> draws one curve for each r instead. Each value of k has its own color and marker shape, the same in every plot, and its own line style; in a plot of several variables, such as <code>plot eta, x_2 vs r</code>, the line style tells the variables apart instead. The curves can be told apart in a printed copy. A plot against a variable that is not swept is refused, and a sweep of more than 2000 runs is refused with the number of runs. The results table has a row for each run, with both swept variables as columns, grouped by the value of the variable that makes the curves of the first plot. A run that fails leaves a gap in its curve and is listed under the sweep editor; a click on a listed run moves the sliders to it.</p>
+
 <h2>The slider</h2>
-<p>The slider under the chart steps through the runs, and every pane follows it: the sheet's values, the Workspace, the states table and the figures show the run the slider is on. A click on a row of the results table moves the slider to that run. Any pane of the Sweep view can show a figure of the sheet through its pane menu; below, the slider is at the last run and the lower pane shows the T–s diagram of that run.</p>
+<p>The slider under the chart steps through the runs, and every pane follows it: the sheet's values, the Workspace, the states table and the figures show the run the slider is on. A click on a row of the results table moves the slider to that run. With two sweep lines there is a slider for each swept variable: moving one keeps the other at its value, so the run moves along one curve, and the run the sliders are on is drawn as filled markers. Any pane of the Sweep view can show a figure of the sheet through its pane menu; below, the slider is at the last run and the lower pane shows the T–s diagram of that run.</p>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="1032" y1="292.21" x2="707.44" y2="292.21"/><line x1="1032" y1="428.27" x2="1004.27" y2="428.27"/></svg>
@@ -64,7 +71,7 @@ plot x_2 vs T_1</code></pre>
 <p>Leaving the Sweep view returns every pane to the sheet as written.</p>
 
 <h2>Exporting a sweep</h2>
-<p>The export button of a sweep chart writes it as PNG, SVG or PDF, copies it as an image, copies its data as tab-separated text, or writes the data as CSV or a MATLAB script. A sweep that has run can also be included in a published report (see <a href="publishing.html">Publishing and exporting</a>).</p>
+<p>The export button of a sweep chart writes it as PNG, SVG or PDF, copies it as an image, copies its data as tab-separated text, or writes the data as CSV or a MATLAB script. With two sweep lines the CSV has one row per run, and the MATLAB script writes each recorded variable as a matrix, a row for each value of the first swept variable and a column for each value of the second, with one <code>plot</code> call per curve. A sweep that has run can also be included in a published report (see <a href="publishing.html">Publishing and exporting</a>).</p>
 </main>
 <nav class="pager" aria-label="Pages"><a class="prev" href="cycle.html"><span>Previous</span>A complete cycle</a><a class="next" href="publishing.html"><span>Next</span>Publishing and exporting</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
