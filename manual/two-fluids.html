@@ -38,7 +38,8 @@ check T_4 &gt; T_1</code></pre>
   <li>A state of another fluid names it in parentheses after its label: <code>state 3 (water) : …</code>.</li>
   <li><code>state 4 (water) : p = p_w, h = h_4</code> gives state 4 an h the sheet has not found yet. The balance finds h_4, and Dome then fixes state 4 from p_w and h_4.</li>
   <li>The fluids share one set of labels, so each state needs a label of its own. A second state 1, of either fluid, is an error.</li>
-  <li>Without <code>(water)</code>, state 3 is R-134a at 1 bar and 15 °C, a superheated vapor, and Dome gives no message. Check the phase of each state in the States tab.</li>
+  <li>The States tab has a Fluid column when the states are of more than one fluid. Here it shows R-134a for states 1 and 2 and water for states 3 and 4.</li>
+  <li>A state line that names no fluid takes the sheet's. Without <code>(water)</code>, state 3 is R-134a at 1 bar and 15 °C, a superheated vapor. <a href="#refuses">When Dome refuses</a>, below, shows the message and the States tab.</li>
   <li>The streams flow in opposite directions. The water entering (3) meets the refrigerant leaving (2), and the water leaving (4) meets the refrigerant entering (1).</li>
   <li>Heat flows from the warmer fluid to the colder one at each end, so both checks must pass. With <code>m_dot_r = 0.2 [kg/s]</code>, T_4 = 1.9679 °C and the second check fails.</li>
 </ol>
@@ -93,6 +94,28 @@ state 3 (water) : p = p_w, T = 15 [C]
 dh = h_3 - h_2</code></pre>
 <p class="msg">h_3 is measured from the steam tables' reference and h_2 from the R-134a tables' reference; use one reference for every stream.</p>
 <p>The two values count from different zeros, or <a href="states.html#reference">references</a>, so their difference has no meaning. Write each stream's change from two states of its own fluid: <code>m_dot_w*(h_3 - h_4)</code> for the water.</p>
+
+<h3>A state without its fluid</h3>
+<pre class="refused"><code>fluid r134a
+p_r = 3.2 [bar]; p_w = 1 [bar]
+m_dot_r = 0.12 [kg/s]; m_dot_w = 0.6 [kg/s]
+state 1 : p = p_r, x = 0.2
+state 2 : p = p_r, T = 10 [C]
+state 3 : p = p_w, T = 15 [C]
+state 4 (water) : p = p_w, h = h_4
+m_dot_r*(h_2 - h_1) = m_dot_w*(h_3 - h_4)</code></pre>
+<p class="msg">h_3 is measured from the R-134a tables' reference and h_4 from the steam tables' reference; use one reference for every stream.</p>
+<p>State 3 names no fluid, so it takes the <code>fluid</code> line and is R-134a. The first columns of the States tab show it:</p>
+<table class="plain">
+  <thead><tr><th>State</th><th>Fluid</th><th>Phase</th><th>p [bar]</th><th>T [°C]</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>R-134a</td><td>two-phase</td><td>3.2</td><td>2.4768</td></tr>
+    <tr><td>2</td><td>R-134a</td><td>superheated</td><td>3.2</td><td>10</td></tr>
+    <tr><td>3</td><td>R-134a</td><td>superheated</td><td>1</td><td>15</td></tr>
+    <tr><td>4</td><td>water</td><td>compressed liquid</td><td>1</td><td>55.636</td></tr>
+  </tbody>
+</table>
+<p>Write <code>state 3 (water) : p = p_w, T = 15 [C]</code>. With <code>(water)</code> left off states 3 and 4 both, every state is R-134a and Dome gives no message, so read the phase of each state.</p>
 
 <h3>One label for two states</h3>
 <pre class="refused"><code>fluid r134a
