@@ -17,31 +17,38 @@
 </header>
 <main class="page">
 <h1>Dome manual</h1>
-<p class="lede">Dome is the thermodynamics workbench for ENES232. A sheet holds equations written as on paper; Dome solves them with fluid properties from CoolProp, each fluid on a stated reference state, and draws property diagrams of the states the sheet defines.</p>
+<p class="lede">Dome is the thermodynamics workbench for ENES232. A sheet holds equations written as on paper. Dome solves them with fluid properties from CoolProp, each fluid on a stated reference state, and draws property diagrams of the sheet's states.</p>
 
-<p>Dome knows no particular problem. The sheet supplies the system, the states, the balances and the assumptions; Dome supplies the properties, solves the equations and reports each line it cannot use. The same sheet can be swept over a range of one input, published as a report, and exported to MATLAB, where the Dome toolbox computes the same properties.</p>
+<p>Dome knows no particular problem. The sheet supplies the system, the states, the balances and the assumptions. Dome supplies the properties, solves the equations and reports each line it cannot use. A sheet can also be swept over a range of one input, published as a report, or exported to MATLAB. In MATLAB, the Dome toolbox computes the same properties.</p>
 
 <figure class="shot plain" style="--nwpx:1156px">
   <a class="img" href="img/window.png"><img src="img/window.png" width="1280" height="800" alt="The Dome window with the Rankine cycle example open: the header with its buttons and menus, the Files and Workspace panes on the left, the sheet and a T–s diagram in the middle, and the states table at the bottom."></a>
   <figcaption>The Dome window with the Rankine cycle example: the sheet, its T–s diagram and the states table.</figcaption>
 </figure>
 
-<h2>Pages</h2>
+<h2 id="pages" class="lookup">Pages</h2>
 <ol class="toc">
   <li><a href="install.html">Installing and first launch</a> <span>Installing on macOS, Windows and Linux; the parts of the window; the Help menu; updates.</span></li>
-  <li><a href="sheet.html">Writing a sheet</a> <span>Equations, units, temperatures, comments and sections, checks, starting values, problems, the Math view, and the language reference.</span></li>
-  <li><a href="states.html">States and diagrams</a> <span>Fluids, state lines, property functions, the states table, diagrams, dragging a state, and the previous run.</span></li>
-  <li><a href="cycle.html">A complete cycle</a> <span>The Rankine cycle example from given values to the T–s diagram.</span></li>
-  <li><a href="sweeps.html">Sweeps</a> <span>Running a sheet over a range of one or two inputs: sweep, record and plot lines, families of curves, the sliders, the chart and the table.</span></li>
-  <li><a href="publishing.html">Publishing and exporting</a> <span>Reports in PDF, HTML, LaTeX and MATLAB; figures; the states table; MATLAB scripts.</span></li>
-  <li><a href="toolbox.html">The MATLAB toolbox</a> <span>Installing Dome.mltbx, the Getting Started guide and updates.</span></li>
+  <li><a href="sheet.html">Writing a sheet</a> <span>Equations and units, temperatures, comments, checks, functions, tables, integrals and derivatives. Then the messages Dome gives, the Math view and keys.</span></li>
+  <li><a href="states.html">States and diagrams</a> <span>States of one fluid, property functions, the states table, diagrams, dragging a state, and the previous run.</span></li>
+  <li><a href="two-fluids.html">Two fluids</a> <span>Two fluids in one sheet: a heat exchanger in which R-134a cools a stream of water.</span></li>
+  <li><a href="moist-air.html">Moist air</a> <span>The properties of moist air from functions, cooling with dehumidification, and two streams mixed.</span></li>
+  <li><a href="cycle.html">A complete cycle</a> <span>The Rankine cycle example, from given values to the T–s diagram.</span></li>
+  <li><a href="sweeps.html">Sweeps</a> <span>A sheet run over a range of one or two inputs, families of curves, the sliders, the chart and the table.</span></li>
+  <li><a href="examples.html">Examples</a> <span>The eleven examples of the Help menu: the problem each one solves, and the page that walks through it.</span></li>
+  <li><a href="publishing.html">Publishing and exporting</a> <span>A sheet as a report or a MATLAB script; comments in a report; figures and the states table.</span></li>
+  <li><a href="toolbox.html">The MATLAB toolbox</a> <span>Installing Dome.mltbx, a first script, the Getting Started guide, and updates.</span></li>
+  <li><a href="reference.html">Reference</a> <span>The keywords, operators, units, fluids and functions in tables; the rules in full; every rewrite Dome offers; and the Reference pane.</span></li>
 </ol>
 
-<h2>Other resources</h2>
+<h2 id="examples" class="lookup">The examples</h2>
+<p>In Dome, Help › Examples opens eleven complete sheets, from a first sheet of equations and units to the entropy produced in a hot-water tank. Comments in each sheet explain its steps. The <a href="examples.html">Examples</a> page gives the problem each one solves and the page of this manual that walks through it.</p>
+
+<h2 id="other" class="lookup">Other resources</h2>
 <ul>
   <li><a href="../index.html">Download page</a>: the installer for each system and the MATLAB toolbox.</li>
   <li><a href="matlab/getting-started.html">Getting started with the Dome toolbox</a>: the MATLAB guide, with code and output for each part of the toolbox.</li>
-  <li>In Dome, Help › Examples opens eleven complete sheets, and Help › Take the tour points out each part of the window.</li>
+  <li>In Dome, Help › Take the tour points out each part of the window.</li>
 </ul>
 </main>
 <nav class="pager" aria-label="Pages"><span></span><a class="next" href="install.html"><span>Next</span>Installing and first launch</a></nav>

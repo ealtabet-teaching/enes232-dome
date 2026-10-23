@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The MATLAB toolbox · Dome manual</title>
-<meta name="description" content="Installing the Dome toolbox for MATLAB, its Getting Started guide, and its updates.">
+<meta name="description" content="Installing the Dome toolbox for MATLAB, a first script, the Getting Started guide, updates, and scripts exported from Dome.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="manual.css">
 </head>
@@ -17,9 +17,9 @@
 </header>
 <main class="page">
 <h1>The MATLAB toolbox</h1>
-<p class="lede">The Dome toolbox computes the same properties as Dome in MATLAB: states, property functions, and T–s, T–v, p–v, p–h and h–s diagrams. It runs in plain MATLAB, with nothing compiled, and gives Dome's numbers. Scripts exported from Dome use it.</p>
+<p class="lede">The Dome toolbox computes Dome's properties in MATLAB: states, property functions, and T–s, T–v, p–v, p–h and h–s diagrams. It runs in plain MATLAB, with nothing compiled. Scripts exported from Dome use it.</p>
 
-<h2>Installing</h2>
+<h2 id="installing">Installing</h2>
 <p>MATLAB R2019b or later.</p>
 <ol class="steps">
   <li>Download <code>Dome.mltbx</code> from the <a href="../index.html">download page</a>.</li>
@@ -27,28 +27,48 @@
   <li>MATLAB then opens the Getting Started guide.</li>
 </ol>
 
-<h2>The Getting Started guide</h2>
-<p><code>dome.gettingStarted</code> opens the guide again at any time. It is a live script with code and output for each part of the toolbox: a state from two properties (with English units), saturation and two-phase states, property functions and arrays of states, the other fluids, an ideal Rankine cycle with its T–s diagram, tables of states, updates, and the scripts Dome's MATLAB export writes. The same guide is online: <a href="matlab/getting-started.html">Getting started with the Dome toolbox</a>.</p>
-<pre><code>s1 = dome.state('water', 'p', 80, 'bar', 'T', 480, 'C')
+<h2 id="first-script">A first script</h2>
+<p>Steam expands isentropically in a turbine from 80 bar and 480 °C to 7 bar. This script finds the work per unit mass and draws the T–s diagram.</p>
+<pre class="matlab"><code>s1 = dome.state('water', 'p', 80, 'bar', 'T', 480, 'C')
 s2 = dome.state('water', 'p', 7, 'bar', 's', s1.s);
 w  = s1.h - s2.h                                   % kJ/kg
 dome.plot('Ts', s1, 's', s2)</code></pre>
-<p><code>help dome</code> lists the functions, and <code>dome.selftest</code> checks the installation against values computed by Dome.</p>
+<p>MATLAB prints state 1 with h = 3349.7 kJ/kg and s = 6.6614 kJ/(kg·K), then w = 606.9572. A Dome sheet with the same two states gives h_1 - h_2 = 606.96 kJ/kg.</p>
+<ol>
+  <li><code>dome.state</code> takes the fluid, then two properties, each as a name, a value and a unit.</li>
+  <li>A value without a unit is in the current unit system: kPa, K, m³/kg, kJ/kg and kJ/(kg·K) unless <code>dome.units</code> sets another.</li>
+  <li>A state's fields are its properties p, T, v, u, h, s, x, cp and cv: <code>s1.h</code> is h in kJ/kg.</li>
+  <li><code>dome.plot</code> takes the diagram, then the states. Between two states it takes the property held constant, <code>'p'</code>, <code>'s'</code>, <code>'T'</code>, <code>'v'</code> or <code>'h'</code>, or <code>'-'</code> for a straight line.</li>
+  <li><code>help dome</code> lists the functions, and <code>help dome.state</code> gives one in full.</li>
+  <li><code>dome.selftest</code> checks the installation against values computed by Dome. It ends with "dome.selftest: all checks passed".</li>
+</ol>
 
-<h2 id="updates">Updates</h2>
-<p>Once a day, the first use of the toolbox in a MATLAB session asks whether a newer version has been published. When one has, MATLAB prints one line, for example:</p>
-<pre><code>Dome toolbox 0.2.0 is available (this is 0.1.0); dome.update installs it.</code></pre>
-<ul>
+<h2 id="guide" class="lookup">The Getting Started guide</h2>
+<p><code>dome.gettingStarted</code> opens the guide again at any time. It is a live script with code and output for each part of the toolbox. The same guide is online: <a href="matlab/getting-started.html">Getting started with the Dome toolbox</a>. Its parts are these:</p>
+<ol>
+  <li>A state from two properties, with English units.</li>
+  <li>Saturation and two-phase states.</li>
+  <li>Property functions and arrays of states.</li>
+  <li>The other fluids.</li>
+  <li>An ideal Rankine cycle with its T–s diagram.</li>
+  <li>Tables of states.</li>
+  <li>Updates, and the scripts that Dome's MATLAB export writes.</li>
+</ol>
+
+<h2 id="updates">Updating the toolbox</h2>
+<p>Once a day, the first use of the toolbox in a MATLAB session asks whether a newer version has been published. When one has, MATLAB prints one line, such as:</p>
+<pre class="matlab"><code>Dome toolbox 0.1.16 is available (this is 0.1.0); dome.update installs it.</code></pre>
+<ol>
   <li><code>dome.update</code> downloads the new version and installs it in place of the old one.</li>
-  <li><code>dome.version</code> prints the version installed.</li>
+  <li><code>dome.version</code> prints the version installed, such as "Dome toolbox 0.1.16".</li>
   <li><code>dome.update('off')</code> stops the daily check, and <code>dome.update('on')</code> starts it again.</li>
-</ul>
-<p>The check is quiet when GitHub cannot be reached.</p>
+  <li>The check is quiet when GitHub cannot be reached, and in MATLAB without its desktop, such as <code>matlab -batch</code>.</li>
+</ol>
 
-<h2>Scripts from Dome</h2>
-<p>Publish › MATLAB script, or File › Export › MATLAB script, writes a sheet as a MATLAB script (see <a href="publishing.html">Publishing and exporting</a>). With “States from the Dome MATLAB toolbox” checked, each state line becomes a call to <code>dome.state</code>, so the script computes again when an input changes.</p>
+<h2 id="scripts" class="lookup">Scripts from Dome</h2>
+<p>Publish › MATLAB script, or File › Export › MATLAB script, writes a sheet as a MATLAB script. With "States from the Dome MATLAB toolbox" checked, each state line becomes a call to <code>dome.state</code>. <a href="publishing.html#matlab">Publishing and exporting</a> shows such a script.</p>
 </main>
-<nav class="pager" aria-label="Pages"><a class="prev" href="publishing.html"><span>Previous</span>Publishing and exporting</a><span></span></nav>
+<nav class="pager" aria-label="Pages"><a class="prev" href="publishing.html"><span>Previous</span>Publishing and exporting</a><a class="next" href="reference.html"><span>Next</span>Reference</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
 </body>
 </html>

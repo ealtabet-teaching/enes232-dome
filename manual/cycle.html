@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A complete cycle · Dome manual</title>
-<meta name="description" content="The Rankine cycle example walked through: given values, states, equations, results, the energy balance check and the T–s diagram.">
+<meta name="description" content="The Rankine cycle example from start to end: the whole sheet, its given values and states, the work and heat transfer of each component, the energy balance check, the T–s diagram, a changed input, and the messages a cycle sheet meets.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="manual.css">
 </head>
@@ -17,18 +17,85 @@
 </header>
 <main class="page">
 <h1>A complete cycle</h1>
-<p class="lede">The third example, Help › Examples › Rankine cycle, is a whole problem on one sheet: a Rankine cycle with water as the working fluid, an isentropic pump and a turbine with an isentropic efficiency of 0.86. The sheet follows the order of a solution on paper.</p>
+<p class="lede">Help › Examples › Rankine cycle is a whole problem on one sheet. Water is the working fluid, the pump is isentropic, and the turbine has an isentropic efficiency of 0.86. This page shows the whole sheet, then follows it in the order of a solution on paper.</p>
 
-<h2>Given values</h2>
-<pre><code>fluid water
+<h2 id="sheet">The whole sheet</h2>
+<pre><code>%% Rankine cycle with turbine efficiency
+% Water is the working fluid. The turbine has an isentropic efficiency;
+% the pump is isentropic.
+fluid water
+
+%% Given values
+p_b   = 70 [bar]       % boiler pressure
+T_1   = 520 [C]        % turbine inlet temperature
+p_c   = 0.1 [bar]      % condenser pressure
+eta_t = 0.86           % turbine isentropic efficiency
+
+%% States
+% No pressure drop in the boiler and condenser: states 4 and 1 are at
+% p_b, states 2 and 3 at p_c.
+state 1  : p = p_b, T = T_1
+% State 2s: the turbine exit if the expansion were isentropic.
+state 2s : p = p_c, s = s_1
+% The actual exit enthalpy follows from the turbine efficiency.
+eta_t = (h_1 - h_2) / (h_1 - h_2s)
+state 2  : p = p_c, h = h_2
+% State 3: saturated liquid leaves the condenser.
+state 3  : p = p_c, x = 0
+% State 4: the pump is isentropic, so s_4 = s_3.
+state 4  : p = p_b, s = s_3
+
+%% Work and heat transfer per unit mass of steam
+% Each component: steady state, kinetic and potential energy changes
+% neglected. Each amount is positive, with its direction in its name.
+% Turbine, no stray heat transfer. w_t: turbine work per unit mass
+% flowing, Ẇ_t/ṁ.
+w_t   = h_1 - h_2      % turbine
+% Pump, no stray heat transfer. w_p: pump work per unit mass, Ẇ_p/ṁ.
+w_p   = h_4 - h_3      % pump
+% Boiler, no work. q_in: heat transfer to the steam per unit mass, Q̇_in/ṁ.
+q_in  = h_1 - h_4      % boiler
+% Condenser, no work. q_out: heat transfer from the steam per unit
+% mass, Q̇_out/ṁ.
+q_out = h_2 - h_3      % condenser
+% w_net: net work per unit mass, Ẇ_cycle/ṁ.
+w_net = w_t - w_p
+
+%% Performance
+eta = w_net / q_in     % thermal efficiency
+bwr = w_p / w_t        % back work ratio
+
+%% Energy balance of the cycle
+check q_in - q_out == w_net
+
+%% T-s diagram
+% A -s- path between states whose entropies differ is drawn dashed, as for
+% the actual expansion 1-2.
+plot Ts : 1 -s- 2 -p- 3 -s- 4 -p- 1
+% Change T_1 to 560 C and watch eta and x_2.</code></pre>
+<p>Copy the sheet into Dome, or open it from the Help menu. Dome gives w_net = 1099.3 kJ/kg, eta = 0.33711 and bwr = 0.0063737, and the check line shows "passed".</p>
+<ol>
+  <li>A line that starts with <code>%%</code> names a part of the solution: the given values, the states, the work and heat transfer, and so on.</li>
+  <li>A line that starts with <code>%</code> is a comment. The comments state the assumptions, as a solution on paper does.</li>
+  <li>Each section below shows the lines it explains, what Dome gives for them, and the rules they follow.</li>
+</ol>
+
+<h2 id="given">Given values</h2>
+<pre><code>%% Given values
 p_b   = 70 [bar]       % boiler pressure
 T_1   = 520 [C]        % turbine inlet temperature
 p_c   = 0.1 [bar]      % condenser pressure
 eta_t = 0.86           % turbine isentropic efficiency</code></pre>
-<p>These four lines are inputs of the sheet: an input is a line <code>name = number [unit]</code>, or a number written in a state line (<code>x = 0</code> in state 3 makes <code>x_3</code> an input). The <code>x = 0</code> of state 3 below is a fifth input. An input can be dragged on a figure when it fixes a state along an axis, and swept in the Sweep view.</p>
+<p>A given value shows nothing at the right of its line, since the line states it. The Workspace lists each one with its unit.</p>
+<ol>
+  <li>A line <code>name = number [unit]</code> is an input of the sheet. A number written in a state line is one too: the <code>x = 0</code> of state 3 makes x_3 an input.</li>
+  <li>An efficiency is a plain number with no unit. Write 0.86, not 86; <a href="#refuses">When Dome refuses</a> shows what 86 gives.</li>
+  <li>An input can be swept over a range of values (see <a href="sweeps.html">Sweeps</a>). Some inputs can also be dragged on a diagram, as <a href="#diagram">the T–s diagram</a> shows.</li>
+</ol>
 
-<h2>States</h2>
-<pre><code>% No pressure drop in the boiler and condenser: states 4 and 1 are at
+<h2 id="states">States</h2>
+<pre><code>%% States
+% No pressure drop in the boiler and condenser: states 4 and 1 are at
 % p_b, states 2 and 3 at p_c.
 state 1  : p = p_b, T = T_1
 % State 2s: the turbine exit if the expansion were isentropic.
@@ -40,12 +107,14 @@ state 2  : p = p_c, h = h_2
 state 3  : p = p_c, x = 0
 % State 4: the pump is isentropic, so s_4 = s_3.
 state 4  : p = p_b, s = s_3</code></pre>
+<p>Dome gives the phase or the quality at the right of each state line. State 2s has x = 0.828 and state 2 has x = 0.904; state 4 is a compressed liquid. The efficiency line gives h_2 = 2353.5 kJ/kg.</p>
 <ol>
-  <li><strong>State 1</strong>, the turbine inlet, from the boiler pressure and the turbine inlet temperature.</li>
-  <li><strong>State 2s</strong>, the turbine exit if the expansion were isentropic: the condenser pressure and <code>s_1</code>.</li>
-  <li><strong>The turbine efficiency</strong> is an equation in <code>h_2</code>, the one unknown it holds. Dome solves it, and <code>h_2</code> then fixes <strong>state 2</strong> with the condenser pressure.</li>
-  <li><strong>State 3</strong>, saturated liquid leaving the condenser: <code>x = 0</code>.</li>
-  <li><strong>State 4</strong>, the pump exit: the boiler pressure and <code>s_3</code>, for an isentropic pump.</li>
+  <li>The line <code>fluid water</code>, near the top of the sheet, sets the fluid of the state lines after it.</li>
+  <li>A state line fixes a state from two properties and defines p_1, T_1, v_1, u_1, h_1, s_1 and x_1. <a href="states.html#state-lines">State lines</a> gives the pairs that fix a state.</li>
+  <li>A property may be given by a name: <code>s = s_1</code> gives state 2s the entropy of state 1, as an isentropic expansion has.</li>
+  <li>A label is made of letters, digits and underscores, such as <code>2s</code>. The properties of state 2s are p_2s, h_2s, s_2s and so on.</li>
+  <li>The efficiency line has one unknown, h_2. Dome solves it, and h_2 then fixes state 2 with p_c. The lines may come in any order.</li>
+  <li>The states table under the sheet gives every property of every state.</li>
 </ol>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
@@ -62,8 +131,9 @@ state 4  : p = p_b, s = s_3</code></pre>
   </ol></figcaption>
 </figure>
 
-<h2>Work, heat transfer and performance</h2>
-<pre><code>% Each component: steady state, kinetic and potential energy changes
+<h2 id="balances">Work and heat transfer</h2>
+<pre><code>%% Work and heat transfer per unit mass of steam
+% Each component: steady state, kinetic and potential energy changes
 % neglected. Each amount is positive, with its direction in its name.
 % Turbine, no stray heat transfer. w_t: turbine work per unit mass
 % flowing, Ẇ_t/ṁ.
@@ -77,13 +147,28 @@ q_in  = h_1 - h_4      % boiler
 q_out = h_2 - h_3      % condenser
 % w_net: net work per unit mass, Ẇ_cycle/ṁ.
 w_net = w_t - w_p
+
+%% Performance
 eta = w_net / q_in     % thermal efficiency
 bwr = w_p / w_t        % back work ratio</code></pre>
-<p>Each component's energy balance, per unit mass of steam, is one line, after a comment naming the assumptions that reduce the balance to it. Each amount is positive, with its direction in its name. The value of each line appears at its right, and the Workspace lists every result with its unit.</p>
+<p>Dome gives w_t = 1106.3 kJ/kg, w_p = 7.0513 kJ/kg, q_in = 3260.9 kJ/kg and q_out = 2161.6 kJ/kg. Then w_net = 1099.3 kJ/kg, eta = 0.33711 and bwr = 0.0063737.</p>
+<ol>
+  <li>Each component's energy balance is one line. The comment above it names the assumptions that reduce the balance to that line.</li>
+  <li>Each amount is positive, with its direction in its name: q_in is the heat transfer to the steam, and q_out the heat transfer from it.</li>
+  <li>Each amount is per unit mass of steam: w_t is Ẇ_t/ṁ. For a rate, give the mass flow rate. With <code>m_dot = 30 [kg/s]</code>, the line <code>W_cycle = m_dot*w_net</code> gives 32978 kW.</li>
+  <li>The Workspace lists every result with its unit.</li>
+</ol>
 
-<h2>The check</h2>
-<pre><code>check q_in - q_out == w_net</code></pre>
-<p>For the cycle as a whole, the net heat transfer equals the net work. The check confirms that the work and heat-transfer lines are consistent with each other; a sign or state-label error makes it fail. It is evaluated after the sheet is solved; the Checks tab shows that it passed. A check that fails is listed as Failed.</p>
+<h2 id="check">The energy balance check</h2>
+<pre><code>%% Energy balance of the cycle
+check q_in - q_out == w_net</code></pre>
+<p>For a cycle, the net heat transfer equals the net work. Dome shows "passed" at the right of the line, and the Checks tab lists the check as Passed.</p>
+<ol>
+  <li>Dome evaluates a check line after the sheet is solved. This one confirms that the work and heat transfer lines agree with each other.</li>
+  <li>A slip of sign or label makes it fail. With the q_out line written <code>q_out = h_3 - h_2</code>, the check shows "failed", and the Checks tab gives 5422.5 kJ/kg ≠ 1099.3 kJ/kg.</li>
+  <li>Some slips leave the balance true. The efficiency line written upside down, <code>eta_t = (h_1 - h_2s) / (h_1 - h_2)</code>, still passes the check.</li>
+  <li>A check on the turbine catches that slip. An actual expansion ends at a higher enthalpy than the isentropic one, so write <code>check h_2 &gt; h_2s</code>. With the slip, it fails: 1964 kJ/kg not &gt; 2173.4 kJ/kg.</li>
+</ol>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="168" y1="297.18" x2="358.74" y2="297.18"/><line x1="168" y1="343.43" x2="358.74" y2="341.95"/><line x1="168" y1="439.32" x2="461.69" y2="418.18"/><line x1="1032" y1="392.2" x2="1003.64" y2="392.2"/><line x1="168" y1="393.07" x2="202.57" y2="393.07"/></svg>
@@ -99,14 +184,60 @@ bwr = w_p / w_t        % back work ratio</code></pre>
   </ol></figcaption>
 </figure>
 
-<h2>The T–s diagram</h2>
-<pre><code>plot Ts : 1 -s- 2 -p- 3 -s- 4 -p- 1</code></pre>
-<p>The diagram follows the cycle: expansion 1–2, condensation 2–3 at constant pressure, pumping 3–4, and heating 4–1 at constant pressure. Because <code>s_2</code> differs from <code>s_1</code>, the path 1–2 is drawn dashed: the actual expansion is not a process at constant entropy, and only its end states are known. The figure appears in the window above.</p>
+<h2 id="diagram">The T–s diagram</h2>
+<pre><code>%% T-s diagram
+% A -s- path between states whose entropies differ is drawn dashed, as for
+% the actual expansion 1-2.
+plot Ts : 1 -s- 2 -p- 3 -s- 4 -p- 1</code></pre>
+<p>Dome draws the cycle in the figure pane beside the sheet. The plot line shows the name of its figure at its right.</p>
+<ol>
+  <li>Write <code>plot Ts :</code> and the states in the order of the cycle, joined by paths. The path <code>-s-</code> draws a process at constant s, and <code>-p-</code> one at constant p.</li>
+  <li><code>-T-</code>, <code>-v-</code> and <code>-h-</code> draw a process at constant T, v or h, and <code>--</code> a straight line.</li>
+  <li>A path whose property differs at its two ends is drawn dashed. Here s_2 differs from s_1, so the expansion 1–2 is dashed: only its end states are known.</li>
+  <li>A path to a state the sheet does not have is not drawn. With <code>5</code> in place of <code>4</code>, the figure pane shows "no state 5 in the sheet".</li>
+  <li>State 1 is fixed by the input T_1, which the T axis shows, so state 1 can be dragged up and down. At the end of the drag, Dome writes the new value into the line <code>T_1 = 520 [C]</code>.</li>
+  <li>The other diagrams are <code>Tv</code>, <code>pv</code>, <code>ph</code> and <code>hs</code>. <a href="states.html#diagrams">Diagrams</a> gives the rules for all of them.</li>
+</ol>
 
-<h2>Changing an input</h2>
-<p>The last comment of the sheet suggests a change: <code>T_1 = 560 [C]</code>. After the edit, the changed line shows the previous value, the results that changed are tinted, and the T–s diagram draws the previous cycle dashed (see <a href="states.html">States and diagrams</a>). <a href="sweeps.html">Sweeps</a> runs the same sheet over a whole range of turbine inlet temperatures.</p>
+<h2 id="change">Changing an input</h2>
+<pre><code>T_1   = 560 [C]        % turbine inlet temperature</code></pre>
+<p>The comment at the end of the sheet suggests this edit of the T_1 line. Dome then gives eta = 0.3424 and x_2 = 0.923, up from 0.33711 and 0.904.</p>
+<ol>
+  <li>The edited line is tinted and shows the number it held before: <code>was 520</code>.</li>
+  <li>Each result that changed shows the change beside its value. The line of eta shows 0.3424 +0.0053.</li>
+  <li>The T–s diagram draws the previous run dashed, with a legend that names the change. The Previous run box of the figure pane turns this off.</li>
+  <li>To follow a result over a whole range of T_1, run a sweep. <a href="sweeps.html">Sweeps</a> starts from this sheet.</li>
+</ol>
+
+<h2 id="refuses">When Dome refuses</h2>
+<p>Each entry changes or deletes one line of the Rankine example. It shows the line as changed, the message Dome shows, and what to change.</p>
+
+<h3>A sheet with no fluid line</h3>
+<pre class="refused"><code>state 1  : p = p_b, T = T_1</code></pre>
+<p class="msg">state 1 has no fluid: add a line "fluid water" (or another fluid) above it, or write "state 1 (water) : …"</p>
+<p>The line <code>fluid water</code> was deleted. Every state line gets this message with its own label. The state 1 and state 3 lines also get a message that lists the fluids. Write <code>fluid water</code> above the first state line.</p>
+
+<h3>An efficiency written as a percentage</h3>
+<pre class="refused"><code>eta_t = 86           % turbine isentropic efficiency</code></pre>
+<p class="msg">state 2: water: no state has these values of p and h within the property data (0.01 °C to 1926.85 °C, up to 10000 bar)</p>
+<p>The message is on the line <code>state 2  : p = p_c, h = h_2</code>. With eta_t = 86, the efficiency line gives an h_2 far below that of any water at 0.1 bar. Write <code>eta_t = 0.86</code>.</p>
+
+<h3>State 2 fixed as if the expansion were isentropic</h3>
+<pre class="refused"><code>state 2  : p = p_c, s = s_1</code></pre>
+<p class="msg">this equation contradicts the others (its two sides differ by 5.34 %)</p>
+<p>The message is on the efficiency line, <code>eta_t = (h_1 - h_2) / (h_1 - h_2s)</code>. With <code>s = s_1</code>, state 2 is state 2s, and the efficiency cannot be 0.86. Fix state 2 by <code>h = h_2</code>, the enthalpy the efficiency line finds.</p>
+
+<h3>A state line that repeats a given value</h3>
+<pre class="refused"><code>state 1  : p = p_b, T = 520 [C]</code></pre>
+<p class="msg">T_1 is already given on line 8</p>
+<p>A number in a state line is an input, so T_1 is given twice: here and in the line <code>T_1 = 520 [C]</code>. Dome also warns that the state 1 line repeats the others. Write the name instead: <code>T = T_1</code>.</p>
+
+<h3>One label for two states</h3>
+<pre class="refused"><code>state 2  : p = p_c, x = 0</code></pre>
+<p class="msg">state 2 is defined twice</p>
+<p>The state 3 line was changed to give state 2 a second time, so no line fixes state 3. Dome also reports that nothing determines s_3 and h_3. Give each state a label of its own.</p>
 </main>
-<nav class="pager" aria-label="Pages"><a class="prev" href="states.html"><span>Previous</span>States and diagrams</a><a class="next" href="sweeps.html"><span>Next</span>Sweeps</a></nav>
+<nav class="pager" aria-label="Pages"><a class="prev" href="moist-air.html"><span>Previous</span>Moist air</a><a class="next" href="sweeps.html"><span>Next</span>Sweeps</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
 </body>
 </html>

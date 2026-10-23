@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sweeps · Dome manual</title>
-<meta name="description" content="Running a sheet over a range of one or two inputs: the sweep, record and plot lines, families of curves, the sliders, the chart and the table of runs.">
+<meta name="description" content="Running a sheet over a range of one input or two: the sweep, record and plot lines, the slider and the table of runs, families of curves, runs that fail, exporting a sweep, and the messages a sweep meets.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="manual.css">
 </head>
@@ -17,20 +17,29 @@
 </header>
 <main class="page">
 <h1>Sweeps</h1>
-<p class="lede">A sweep runs the sheet once for each value of one input, or for each combination of the values of two, and collects chosen results from every run. The sixth example, Help › Examples › Sweeps, runs the Rankine cycle of the third example for turbine inlet temperatures from 400 °C to 600 °C. It opens in the Sweep view and runs.</p>
+<p class="lede">A sweep runs the sheet once for each value of an input and collects results from every run. Help › Examples › Sweeps opens the Rankine cycle of <a href="cycle.html">A complete cycle</a> in the Sweep view and runs the sweep below.</p>
 
-<h2>The sweep lines</h2>
-<p>The sweep is written in its own editor in the Sweep view; the sheet stays as it is.</p>
-<pre><code>sweep T_1 = 400:20:600 [C]
+<h2 id="one-input">Sweeping one input</h2>
+<pre><code>% The sweep runs the sheet once for each value of T_1, an input of the sheet.
+sweep T_1 = 400:20:600 [C]
+% record keeps these variables from every run, for the results table.
 record eta, x_2, w_net, bwr
+% plot draws one figure per line.
 plot eta vs T_1
-plot x_2 vs T_1</code></pre>
-<ul>
-  <li><strong>sweep</strong> names the input and its values: <code>start:step:stop</code>, or a list such as <code>5, 7, 9</code>. The swept variable must be an input of the sheet: an input is a line <code>name = number [unit]</code>, or a number written in a state line (<code>x = 0</code> in state 3 makes <code>x_3</code> an input).</li>
-  <li><strong>record</strong> lists the variables kept from each run, for the table.</li>
-  <li><strong>plot</strong> draws one chart per line: <code>plot eta vs T_1</code>, or several variables on one chart: <code>plot eta, x_2 vs T_1</code>.</li>
-</ul>
-<p>Run, in the header, runs the sweep again after an edit (<kbd>⌘</kbd><kbd>Enter</kbd>, or <kbd>Ctrl</kbd><kbd>Enter</kbd> on Windows and Linux).</p>
+plot x_2 vs T_1
+% Move the slider to step through the runs; every pane follows it.</code></pre>
+<p>Dome runs the sheet eleven times, for T_1 = 400, 420, … 600 °C. On the first chart, eta rises from 0.32214 at 400 °C to 0.3478 at 600 °C.</p>
+<ol>
+  <li>Write the sweep in the editor of the Sweep view. The sheet stays as it is written.</li>
+  <li><code>sweep T_1 = 400:20:600 [C]</code> gives the values as start:step:stop. A list works too: <code>sweep p_b = 40, 70, 100 [bar]</code>.</li>
+  <li>Write the unit after the values, a unit of the same kind as the input's. The values need a unit whenever the input has one on the sheet.</li>
+  <li>An input written as a plain number, such as <code>eta_t = 0.86</code>, takes plain values: <code>sweep eta_t = 0.80:0.05:0.90</code> runs as written.</li>
+  <li>The swept name must be an input of the sheet: a line <code>name = number [unit]</code>, or a number in a state line. The <code>x = 0</code> of state 3 is one.</li>
+  <li><code>record</code> names the variables kept from each run, for the results table. A plotted variable is kept without being named.</li>
+  <li>Each <code>plot y vs x</code> line draws a chart, with a tab of its own above the charts. Without a plot line, the chart shows the first two recorded variables.</li>
+  <li><code>plot eta, x_2 vs T_1</code> draws two variables on one chart, with an axis for each, left and right.</li>
+  <li>Run, in the header, runs the sweep again after an edit, as does <kbd>⌘</kbd><kbd>Enter</kbd> (<kbd>Ctrl</kbd><kbd>Enter</kbd> on Windows and Linux).</li>
+</ol>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="1032" y1="18.75" x2="866.77" y2="15.42"/><line x1="168" y1="105.64" x2="217.5" y2="105.64"/><line x1="168" y1="151.89" x2="217.5" y2="135.49"/><line x1="168" y1="198.14" x2="217.5" y2="165.34"/><line x1="168" y1="18.75" x2="410.78" y2="15.42"/><line x1="1032" y1="292.21" x2="707.44" y2="292.21"/><line x1="1032" y1="428.27" x2="1004.27" y2="428.27"/></svg>
@@ -48,15 +57,21 @@ plot x_2 vs T_1</code></pre>
   </ol></figcaption>
 </figure>
 
-<h2>Families of curves</h2>
-<p>A second sweep line runs the sheet for every combination of the two swept variables. Each plot line is drawn against one of them, with one curve for each value of the other. For the cold air-standard Otto cycle, whose thermal efficiency is <code>eta = 1 - r^(1 - k)</code>:</p>
-<pre><code>sweep r = 2:1:12
-sweep k = 1.3, 1.35, 1.4
-plot eta vs r</code></pre>
-<p>draws three curves of eta against r, one for each k, with a legend reading <code>k = 1.3</code>, <code>k = 1.35</code> and <code>k = 1.4</code>; <code>plot eta vs k</code> draws one curve for each r instead. Each value of k has its own color and marker shape, the same in every plot, and its own line style; in a plot of several variables, such as <code>plot eta, x_2 vs r</code>, the line style tells the variables apart instead. The curves can be told apart in a printed copy. A plot against a variable that is not swept is refused, and a sweep of more than 2000 runs is refused with the number of runs. The results table has a row for each run, with both swept variables as columns, grouped by the value of the variable that makes the curves of the first plot. A run that fails leaves a gap in its curve and is listed under the sweep editor; a click on a listed run moves the sliders to it.</p>
-
-<h2>The slider</h2>
-<p>The slider under the chart steps through the runs, and every pane follows it: the sheet's values, the Workspace, the states table and the figures show the run the slider is on. A click on a row of the results table moves the slider to that run. With two sweep lines there is a slider for each swept variable: moving one keeps the other at its value, so the run moves along one curve, and the run the sliders are on is drawn as filled markers. Any pane of the Sweep view can show a figure of the sheet through its pane menu; below, the slider is at the last run and the lower pane shows the T–s diagram of that run.</p>
+<h2 id="results">Reading the results</h2>
+<pre><code>sweep p_b = 40:10:120 [bar]
+record eta, x_2, w_net, bwr
+plot eta vs p_b
+plot x_2 vs p_b</code></pre>
+<p>The example ends by suggesting this sweep of the boiler pressure. Dome runs nine values: eta rises from 0.31875 at 40 bar to 0.35285 at 120 bar, and x_2 falls from 0.93867 to 0.8656.</p>
+<ol>
+  <li>The slider under the chart steps through the runs, and a dashed line on the chart marks the run it is on. Beside the slider, Dome lists the recorded values of that run.</li>
+  <li>Every pane follows the slider: the sheet's values, the Workspace, the states table and the figures show the run it is on.</li>
+  <li>A click on the chart moves the slider to the nearest run. A click on a row of the results table moves it to that run.</li>
+  <li>The results table has a row for each run. Copy, above the table, copies it as tab-separated text.</li>
+  <li>Any pane of the Sweep view can show a figure of the sheet: choose it in the pane's menu.</li>
+  <li>Leaving the Sweep view returns every pane to the sheet as written.</li>
+</ol>
+<p>The shot shows the example's own sweep, with the slider at its last run, T_1 = 600 °C, and the T–s diagram of that run.</p>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="1032" y1="292.21" x2="707.44" y2="292.21"/><line x1="1032" y1="428.27" x2="1004.27" y2="428.27"/></svg>
@@ -68,12 +83,103 @@ plot eta vs r</code></pre>
     <li><b>T–s of that run.</b> A figure of the sheet, drawn for the run the slider is on.</li>
   </ol></figcaption>
 </figure>
-<p>Leaving the Sweep view returns every pane to the sheet as written.</p>
 
-<h2>Exporting a sweep</h2>
-<p>The export button of a sweep chart writes it as PNG, SVG or PDF, copies it as an image, copies its data as tab-separated text, or writes the data as CSV or a MATLAB script. With two sweep lines the CSV has one row per run, and the MATLAB script writes each recorded variable as a matrix, a row for each value of the first swept variable and a column for each value of the second, with one <code>plot</code> call per curve. A sweep that has run can also be included in a published report (see <a href="publishing.html">Publishing and exporting</a>).</p>
+<h2 id="families">Families of curves</h2>
+<pre><code>sweep T_1 = 400:20:600 [C]
+sweep p_b = 40, 70, 100 [bar]
+record eta, x_2
+plot eta vs T_1
+plot x_2 vs T_1</code></pre>
+<p>With a second sweep line, Dome runs every combination of the two, here 33 runs. Each chart has a curve for each p_b: at 600 °C, eta is 0.3299, 0.3478 and 0.35845 for 40, 70 and 100 bar.</p>
+<ol>
+  <li>A plot is drawn against one of the swept variables, with a curve for each value of the other. The legend here reads p_b = 40 bar, p_b = 70 bar and p_b = 100 bar.</li>
+  <li><code>plot eta vs p_b</code> draws a curve for each value of T_1 instead.</li>
+  <li>Each value of p_b has its own color and marker shape, the same in every chart. With one variable plotted, it also has its own line style. With several, the line style tells the variables apart.</li>
+  <li>Up to five curves stay apart in a grayscale print.</li>
+  <li>There is a slider for each swept variable. Moving one keeps the other at its value, so the run moves along one curve. The markers of that run are filled.</li>
+  <li>The results table lists p_b, then T_1. Its rows are grouped by p_b, the variable that makes the curves of the first plot.</li>
+  <li>A sweep has two sweep lines at most, and 2000 runs at most.</li>
+</ol>
+
+<h2 id="failed">A run that fails</h2>
+<pre><code>sweep p_c = 0.005, 0.01, 0.05, 0.1 [bar]
+record eta, x_2
+plot eta vs p_c</code></pre>
+<p>The first run, at 0.005 bar, fails. The other runs give eta = 0.38432, 0.35275 and 0.33711. Under the sweep editor, Dome lists the failed run:</p>
+<p class="msg">p_c = 0.005 bar: state 2s: water: no state has these values of p and s within the property data (0.01 °C to 1926.85 °C, up to 10000 bar)</p>
+<p>0.005 bar is below the pressure of water's triple point, 0.006117 bar. Below that pressure, water is never liquid. An isentropic expansion from state 1 to 0.005 bar would end as a mix of ice and vapor. Dome's water has no ice: its data start at 0.01 °C.</p>
+<ol>
+  <li>A run that fails has no values. It leaves a gap in each curve, and its row of the results table shows a red – for each value.</li>
+  <li>The list under the sweep editor gives each failed run's inputs and first error. A click on the inputs moves the slider to that run.</li>
+  <li>The list shows six failed runs at most, then the number of the others.</li>
+  <li>Below the editor, Dome counts the runs, the time they took and the runs that failed.</li>
+</ol>
+
+<h2 id="export">Exporting a sweep</h2>
+<pre><code>sweep T_1 = 400:100:600 [C]
+sweep p_b = 40, 70, 100 [bar]
+record eta
+plot eta vs T_1</code></pre>
+<p>Export, the button above the chart, writes this sweep as a MATLAB script among other formats. The script holds eta as a matrix, with a row for each T_1 and a column for each p_b:</p>
+<pre><code>T_1 = [400 500 600];  % °C
+p_b = [40 70 100];  % bar
+% eta(i, j) is the run with T_1(i) and p_b(j).
+eta = [0.303495 0.322144 0.332342
+       0.316065 0.33451 0.345201
+       0.329898 0.3478 0.35845];</code></pre>
+<ol>
+  <li>Export writes the chart as PNG, SVG or PDF, or copies it as an image.</li>
+  <li>It also copies the data as tab-separated text, or writes it as CSV or a MATLAB script. The data has one row per run, as in the results table.</li>
+  <li>The MATLAB script draws each plot, with one <code>plot</code> call per curve. With two sweep lines, the rows of each matrix follow the variable of the first plot.</li>
+  <li>A published report can include a sweep that has run: see <a href="publishing.html">Publishing</a>.</li>
+</ol>
+
+<h2 id="refuses">When Dome refuses</h2>
+<p>A message about a sweep line appears under the sweep editor, with the line's number. Each entry gives a sweep line, the message and what to change.</p>
+
+<h3>A swept name that is not an input</h3>
+<pre class="refused"><code>sweep w_net = 1000:100:1200 [kJ/kg]</code></pre>
+<p class="msg">w_net is not an input of the sheet (a line w_net = number [unit], or a number in a state line)</p>
+<p>The sheet finds w_net from other values, so a sweep cannot set it. Sweep an input that w_net depends on, such as T_1 or p_b.</p>
+
+<h3>Too many runs</h3>
+<pre class="refused"><code>sweep T_1 = 400:0.05:600 [C]</code></pre>
+<p class="msg">4001 runs is too many; use a larger step (at most 2000 runs)</p>
+<p>Use a larger step. With two sweep lines, the message gives the product, such as 51 × 81 = 4131 runs, and asks for fewer values.</p>
+
+<h3>Values without a unit</h3>
+<pre class="refused"><code>sweep T_1 = 400:100:600</code></pre>
+<p class="msg">the values of T_1 need a unit, as T_1 = 520 [C] on the sheet has one: sweep T_1 = 400:100:600 [C]</p>
+<p>Add the unit the message gives. Before Dome 0.1.17 these values ran as 400 K, 500 K and 600 K, with no message.</p>
+
+<h3>A unit of another kind</h3>
+<pre class="refused"><code>sweep T_1 = 400:100:600 [bar]</code></pre>
+<p class="msg">[bar] is not a unit of T_1, which the sheet gives in [C]</p>
+<p>Write a unit of temperature, such as [C] or [K].</p>
+
+<h3>A range that runs the wrong way</h3>
+<pre class="refused"><code>sweep T_1 = 600:20:400 [C]</code></pre>
+<p class="msg">write a range as start:step:stop, e.g. 320:20:600</p>
+<p>A step of 20 cannot go from 600 down to 400. Write <code>400:20:600</code>, or <code>600:-20:400</code> for the same values in the other order.</p>
+
+<h3>A plot against a third variable</h3>
+<pre class="refused"><code>sweep T_1 = 400:100:600 [C]
+sweep p_b = 40, 70 [bar]
+plot eta vs w_net</code></pre>
+<p class="msg">with two sweep lines, a plot is drawn against one of them: plot eta vs T_1 or plot eta vs p_b</p>
+<p>Plot against T_1 or p_b. With one sweep line, a plot against a recorded variable such as w_net is allowed.</p>
+
+<h3>A recorded name the sheet does not have</h3>
+<pre class="refused"><code>record eta, effic</code></pre>
+<p class="msg">not in the sheet: effic</p>
+<p>The runs go ahead, and the column of effic shows – in every row. Correct the name to one the sheet defines.</p>
+
+<h3>A misspelled sweep line</h3>
+<pre class="refused"><code>sweeps T_1 = 400:20:600 [C]</code></pre>
+<p class="msg">a sweep has lines "sweep name = start:step:stop [unit]", "record a, b" and "plot a, b vs name"</p>
+<p>Dome reads only these three kinds of line, and comments. Correct the first word to <code>sweep</code>.</p>
 </main>
-<nav class="pager" aria-label="Pages"><a class="prev" href="cycle.html"><span>Previous</span>A complete cycle</a><a class="next" href="publishing.html"><span>Next</span>Publishing and exporting</a></nav>
+<nav class="pager" aria-label="Pages"><a class="prev" href="cycle.html"><span>Previous</span>A complete cycle</a><a class="next" href="examples.html"><span>Next</span>Examples</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
 </body>
 </html>

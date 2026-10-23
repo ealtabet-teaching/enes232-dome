@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>States and diagrams · Dome manual</title>
-<meta name="description" content="Fluids, state lines, property functions, the states table, T–s, T–v, p–v, p–h and h–s diagrams, dragging a state, and the previous run.">
+<meta name="description" content="State lines, property functions, fluids, Dome's values beside the tables, T–s, T–v, p–v, p–h and h–s diagrams, dragging a state, the previous run, and the messages for a state Dome refuses.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="manual.css">
 </head>
@@ -17,53 +17,30 @@
 </header>
 <main class="page">
 <h1>States and diagrams</h1>
-<p class="lede">Dome computes the properties of a state from two independent properties, with h, u and s measured from each fluid's stated reference state. This page follows the second example, Help › Examples › States and properties (water).</p>
+<p class="lede">A state line fixes the state of a fluid from two properties, and Dome finds the rest. Each section below starts from a sheet you can copy into Dome, shows what Dome gives, and then lists the rules. The sheets follow Help › Examples › States and properties (water).</p>
 
-<h2>Agreement with the tables</h2>
-<p>Enthalpy, internal energy and entropy are shifted to named reference states: the steam tables' for water, each refrigerant's own tables', h = 0 at 0 K for air and the other ideal gases. Differences between states, and the cycle results built from them, agree closely with the tables; a single value can differ from the printed table by about 1 kJ/kg, and by up to about 5 kJ/kg in parts of the superheated tables. These differences come from the equations behind each: Dome uses CoolProp's current reference equations, and the printed tables were computed from earlier ones.</p>
-<p>R-134a's differences matter most, because its differences between states are small. Dome's R-134a is the international standard equation (Tillner-Roth and Baehr, 1994), from which NIST's published values also come; the textbook's R-134a tables were computed from an earlier equation (Wilson and Basu, 1988). Saturated vapor runs 0.7 to 1.2 kJ/kg above the saturation table from −40 to 48 °C; superheated vapor runs lower as the temperature rises, by about 1 kJ/kg at 60 °C, 2 at 100 °C and up to 4.7 kJ/kg at 200 °C; saturated liquid runs low below −10 °C, by up to 2.1 kJ/kg at −40 °C. A heat or work found between a saturated state and a hot superheated one can therefore differ from the tables' answer by several percent: 4 % for a rigid tank of R-134a cooled from 100 °C to saturated vapor at 20 °C. Propane runs up to 2.6 kJ/kg below its tables near its critical point, and up to 1.7 kJ/kg below them in superheated vapor above 100 °C.</p>
-<p>For an answer that matches a solution worked from the textbook's R-134a tables, use the fluid <code>r134a_book</code>: R-134a from an equation fitted to those tables. Against every row of the tables, SI and English, its saturation pressures are within 0.05 %, its saturation temperatures within 0.03 K, its h within 0.3 kJ/kg (0.6 kJ/kg for saturated liquid in the English tables) and its s within 0.003 kJ/(kg·K); the R-134a answers of the homework's solutions agree within 0.34 %, and the rigid tank above gives −71.14 kJ/kg against −71.11 from the tables. It has values only inside the range of the tables, from −47.48 to 204.44 °C and up to 39.74 bar; outside it, Dome says so and that <code>r134a</code> covers the state. <code>r134a</code> stays the current equation, with the wider range. The two are different equations for one substance, so R-134a from <code>r134a</code> and from <code>r134a_book</code> in one equation is an error.</p>
-
-<h2 id="fluids">Fluids</h2>
-<p>A <code>fluid</code> line sets the fluid for the state lines after it: <code>water</code>, <code>r134a</code>, <code>r134a_book</code> (R-134a fitted to the textbook's tables, inside their range; see above), <code>r22</code>, <code>ammonia</code>, <code>propane</code> or <code>air</code>. Air is an ideal gas with variable specific heats, h = 0 at 0 K. A state of another fluid names it in parentheses: <code>state 2 (r134a) : …</code>.</p>
-<p>Five other gases are ideal gases in the same way, from 220 to 3250 K: <code>nitrogen</code> (or <code>n2</code>), <code>oxygen</code> (<code>o2</code>), <code>carbondioxide</code> (<code>co2</code>), <code>carbonmonoxide</code> (<code>co</code>) and <code>water_ig</code> (<code>h2o_ig</code>), water vapor as an ideal gas. Their h, u and s are per unit mass, so <code>h(n2, T = 298 [K], p = 1 [atm]) * M(n2)</code> is the molar enthalpy h̄, which agrees with the printed molar table to within about 6 kJ/kmol. <code>water_ig</code> counts h from 0 K, as the other ideal gases do, not on the steam tables: its h differs from that of <code>water</code> (or <code>h2o</code>) by a constant, so the two are not mixed in one balance, and an equation where they meet is an error (see moist air below).</p>
-
-<h2 id="state-lines">State lines</h2>
+<h2 id="state-lines">Fixing a state</h2>
+<p>Water is heated at 15 bar from a compressed liquid at 50 °C to a superheated vapor at 320 °C. This sheet fixes four states along the way and finds the heat transfer per unit mass.</p>
 <pre><code>fluid water
 p_b = 15 [bar]
 state 1 : p = p_b, T = 50 [C]
 state 2 : p = p_b, x = 0.3
 state 3 : p = p_b, h = 2200 [kJ/kg]
-state 4 : p = p_b, T = T_4</code></pre>
-<ul>
-  <li><code>state L : a = …, b = …</code> fixes state L from two of p, T, v, u, h, s and x, and defines <code>p_L</code>, <code>T_L</code>, <code>v_L</code>, <code>u_L</code>, <code>h_L</code>, <code>s_L</code> and <code>x_L</code>. A label may be a number or a name such as <code>2s</code>.</li>
-  <li>The two values may be numbers, variables or expressions, and may be unknowns found by the rest of the sheet.</li>
-  <li id="state-refused">A pair that does not fix a state is refused with the reason: values outside the property data, p and T together on the saturation line, and pairs that fit more than one state.</li>
-</ul>
-
-<h2 id="property-functions">Property functions</h2>
-<p>A property function gives one property at a state that need not be numbered: <code>h(water, p = p_b, x = 0)</code>. The functions are <code>p</code>, <code>T</code>, <code>v</code>, <code>u</code>, <code>h</code>, <code>s</code>, <code>x</code>, <code>cp</code>, <code>cv</code> and <code>rho</code>, and <code>Tsat(water, p = …)</code> and <code>psat(water, T = …)</code> give saturation values. <code>M(water)</code> is a fluid's molar mass. Unknowns may sit inside them. Each input has the units of its property and is checked as a state line's property is: in <code>h(water, T = T_x, x = 0) = 100 [kJ/kg]</code>, <code>T_x</code> is a temperature, shown in °C, and <code>h(water, T = 300, x = 0)</code> needs a unit after the 300. An unknown that has units only as an input starts from its name, as a variable without units does, since its units say nothing of where its value lies: a wet bulb lies below the dry bulb.</p>
-
-<h2 id="moist-air">Moist air</h2>
-<pre><code>p = 1.013 [bar]
-T_1 = 30 [C]; phi_1 = 0.5
-omega_1 = omega(moistair, p = p, T = T_1, phi = phi_1)
-h_1 = h(moistair, p = p, T = T_1, phi = phi_1)
-T_dp1 = Tdp(moistair, p = p, T = T_1, phi = phi_1)</code></pre>
-<ul>
-  <li>A moist-air state is fixed by p and two other properties, so moist air (<code>moistair</code>, or <code>humidair</code>) has property functions and no state lines. Each takes exactly three named properties, one of them p.</li>
-  <li>The functions are <code>omega</code> (humidity ratio, kg of vapor per kg of dry air), <code>phi</code> (relative humidity, a fraction from 0 to 1), <code>T</code>, <code>Twb</code> (wet-bulb temperature), <code>Tdp</code> (dew point), <code>pv</code> (partial pressure of the vapor), and <code>h</code>, <code>v</code>, <code>s</code> and <code>cp</code> per kg of dry air.</li>
-  <li>The inputs are p with T and any one of phi, omega, Twb, Tdp, pv or h, or one of the pairs phi and Twb, phi and pv, phi and h, omega and Twb, omega and h, Twb and Tdp, Tdp and h. Other pairs are refused with this list.</li>
-  <li>The properties come from CoolProp's humid-air model, a real mixture: humidity ratios near room conditions are about 0.5 % above those of the ideal-gas relations, and pv is about 0.4 % above phi p<sub>g</sub>. The enthalpy of dry air is zero at the psychrometric datum: 0 °C on an SI sheet, and 0 °F on a sheet in English units, so there <code>h(moistair, p = 14.696 [psi], T = 80 [F], phi = 0.5)</code> is 31.25 Btu/lb, against 0.24 × 80 + omega h<sub>g</sub> = 31.18 with h<sub>g</sub> from the steam tables; and the water in the moist air is on the reference of Dome's water states, so a condensate's <code>h(water, T = …, x = 0)</code> enters a balance directly.</li>
-  <li>A state with more water vapor than saturated air holds at its temperature, such as T = 25 °C with omega = 0.05, or a mixture of two streams that would form fog, is refused for every property, and the message says the limit it is past, such as the most vapor the air holds at that temperature. An unknown inside a moist-air function whose equation holds only at such a state has no value: with <code>h_2 = h(moistair, p = p, T = T_2, omega = w_1)</code> and h_2 below the h of saturated air at w_1, the air is cooled past its dew point at constant omega, and the message gives that lowest h and the dew point, below which some of the water vapor condenses.</li>
-  <li id="references">Each fluid's h, u and s are measured from a reference of its own, and Dome carries the reference through the equations as it carries units. Water is on the steam tables; each refrigerant on its own tables; air (<code>h(air, …)</code>, a state of air) and the other ideal gases count from 0 K, and so does a heat capacity times a value that is certainly a temperature, such as <code>cp_a*T_1</code> with <code>T_1 = 30 [C]</code>, or <code>cp_a*(T_1 - 273.15 [K])</code>, whose <code>T_1 - 273.15 [K]</code> is a temperature 273.15 K below T_1; moist air counts its dry air from 0 °C (0 °F in English units) and its water on the steam tables. A difference of temperatures carries no reference, as in <code>cp_a*(T_1 - T_0)</code>, nor a heat capacity times a temperature given in [K], which may be a change, such as a condenser's <code>m_w*c_w*T_rise</code> with <code>T_rise = 10 [K]</code>. An unknown h, or one typed from a table, takes from its equation only the reference the equation still requires: in <code>m_a*h_a1 + m_w*h_w1 = m_a*h_a2 + m_w*h_w2</code> with the air from <code>h(air, …)</code>, h_w2 takes the steam tables', so <code>T(water, h = h_w2, p = 1 [bar])</code> reads it. A heat or a work never supplies a reference to close a balance. A property function that reads a variable as its h gives it that fluid's reference first. References belong to substances: an equation that takes water from both the steam tables and <code>water_ig</code>, dry air from both <code>h(air, …)</code> and moist air, or R-134a from both <code>r134a</code> and <code>r134a_book</code>, is an error, whatever the amounts.</li>
-  <li>A sum carries both of its operands' references, a product keeps them, and a difference of two values on one reference carries none; the operands of a difference are all that a chain of sums and differences adds and all that it subtracts. An equation or a difference whose two sides are on different references, neither of them none, is an error on its line, and so is an h given to a property function on another reference. So every stream is written one way: every stream with <code>h(moistair, …)</code>, or every stream with the ideal-gas form <code>cp_a*(T - T_0) + omega*h(water, T = …, x = 1)</code>, which carries the steam tables' reference alone, or every stream with <code>h(air, …) + omega*h(water, …)</code>. Dry air at 30 °C mixed at 1 atm with moist air at 10 °C and phi = 0.8, each stream carrying 1 kg/s of dry air, gives 19.9 °C written <code>h(moistair, p = p, T = 30 [C], omega = 0)</code>; written <code>h(air, T = 30 [C], p = p)</code>, dry air at 0 °C has h of about 273 kJ/kg on air's ideal-gas reference, the mixture would be at 154 °C, and the balance is an error. The ideal-gas form beside <code>h(moistair, …)</code> in a difference such as <code>q = h_2 - h_1</code>, or read by <code>T(moistair, …, h = …)</code>, is an error whose message says to write every stream one way. A dehumidifier written with the vapor from <code>h(water_ig, …)</code> and the condensate from <code>h(water, T = T_2, x = 0)</code> is an error that names the vapor's h as h<sub>v</sub> = h<sub>g</sub>(T) on the steam tables; written with <code>h(water, T = …, x = 1)</code> for the vapor, it gives 41.79 kJ per kg of dry air.</li>
-  <li>The wet-bulb temperature is taken over liquid water when it lies above the triple point of water (0.01 °C) and over ice otherwise, so a state near 0 °C has one wet bulb, and a wet bulb given is read the same way; where the state also has the other, a warning on the line names both. Dry air (omega = 0) has no dew point.</li>
-  <li>Variables named <code>phi</code>, <code>omega</code>, <code>pv</code>, <code>Twb</code> or <code>Tdp</code> are still variables; only a name followed by an opening parenthesis is a function.</li>
-</ul>
-
-<h2>The states table</h2>
-<p>The States tab of the results lists the phase and properties of every state in the units chosen in the header. The two properties given on each state line are in bold. The copy button at the right of the tab's header copies the table as tab-separated text, and File › Export › States table writes it as a CSV file.</p>
+state 4 : p = p_b, T = 320 [C]
+q_14 = h_4 - h_1</code></pre>
+<p>At the right of each state line, Dome shows the phase, or the quality of a two-phase state: x_3 = 0.696. It gives h_1 = 210.7 kJ/kg, h_4 = 3082.5 kJ/kg and q_14 = 2871.8 kJ/kg.</p>
+<ol>
+  <li>A <code>fluid</code> line sets the fluid of the state lines after it.</li>
+  <li><code>state 1 : p = p_b, T = 50 [C]</code> fixes state 1 from two of p, T, v, u, h, s and x. It defines p_1, T_1, v_1, u_1, h_1, s_1 and x_1, which any line may use.</li>
+  <li>Each property needs its unit, as a number in an equation does. A value may be a number, a variable or an expression.</li>
+  <li>A value may be an unknown that another line finds. In <code>state 2 : p = 0.1 [bar], s = s_1</code>, s_1 comes from state 1.</li>
+  <li>A label may be a number or a name: <code>state 2s : …</code> defines p_2s, h_2s and the rest.</li>
+  <li>x has a value only for a two-phase state, saturated liquid and vapor included. A line that uses x_1 of the compressed liquid above is an error.</li>
+  <li>A state of another fluid names it in parentheses: <code>state 3 (water) : …</code>. <a href="two-fluids.html">Two fluids</a> shows a sheet with states of two fluids.</li>
+  <li>The States tab of the results lists every state's phase and properties, in the units chosen in the header. The two properties given on each state line are in bold.</li>
+  <li>The copy button at the right of the States tab copies the table as tab-separated text. File › Export › States table writes it as a CSV file.</li>
+</ol>
+<p>The shot shows the whole example, with a T–s diagram of the four states.</p>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="168" y1="147.93" x2="358.74" y2="147.93"/><line x1="168" y1="207.63" x2="358.74" y2="207.63"/><line x1="168" y1="297.18" x2="358.74" y2="297.18"/><line x1="1032" y1="441.47" x2="1003.64" y2="421.74"/><line x1="1032" y1="403.97" x2="962.61" y2="403.97"/><line x1="1032" y1="205.39" x2="1004.26" y2="205.39"/></svg>
@@ -80,8 +57,73 @@ T_dp1 = Tdp(moistair, p = p, T = T_1, phi = phi_1)</code></pre>
   </ol></figcaption>
 </figure>
 
+<h2 id="property-functions">Property functions</h2>
+<p>A property function gives one property at a state that need not be numbered, such as the saturated liquid and vapor at the boiler pressure.</p>
+<pre><code>p_b = 15 [bar]
+T_sat = Tsat(water, p = p_b)
+h_f = h(water, p = p_b, x = 0)
+h_g = h(water, p = p_b, x = 1)
+h(water, T = T_x, x = 0) = 100 [kJ/kg]</code></pre>
+<p>Dome gives T_sat = 198.29 °C, h_f = 844.63 kJ/kg, h_g = 2791 kJ/kg and T_x = 23.828 °C.</p>
+<ol>
+  <li>Write the fluid first, then two named properties: <code>h(water, p = p_b, x = 0)</code>.</li>
+  <li>The functions are <code>p</code>, <code>T</code>, <code>v</code>, <code>u</code>, <code>h</code>, <code>s</code>, <code>x</code>, <code>cp</code>, <code>cv</code> and <code>rho</code>.</li>
+  <li><code>Tsat(water, p = …)</code> is the saturation temperature and <code>psat(water, T = …)</code> the saturation pressure. <code>M(water)</code> is the molar mass, 18.015 kg/kmol.</li>
+  <li>Each input needs the unit of its property, as in a state line: <code>h(water, T = 300, x = 0)</code> needs a unit after the 300.</li>
+  <li>An unknown may be inside a call. The last line finds T_x, the temperature of saturated liquid water with h = 100 kJ/kg.</li>
+  <li>For an ideal gas, <code>h</code>, <code>u</code>, <code>cp</code> and <code>cv</code> need T alone: <code>h(air, T = 300 [K])</code> is 300.17 kJ/kg. <code>s</code> needs p as well.</li>
+  <li>Moist air takes p and two more properties. <a href="moist-air.html">Moist air</a> gives its functions.</li>
+</ol>
+
+<h2 id="fluids">Fluids</h2>
+<p>A sheet may use several fluids. Here R-134a is compressed from saturated vapor at −10 °C to 8 bar at constant entropy, and the last line reads h of air.</p>
+<pre><code>fluid r134a
+state 1 : T = -10 [C], x = 1
+state 2 : p = 8 [bar], s = s_1
+h_air = h(air, T = 300 [K], p = 1 [bar])</code></pre>
+<p>Dome gives h_1 = 242.44 kJ/kg, T_2 = 36.926 °C, h_2 = 271.17 kJ/kg and h_air = 300.17 kJ/kg.</p>
+<p id="reference">Each fluid's h, u and s count from a <em>reference</em>: a state at which the fluid's tables set them to zero. The steam tables set u and s to zero for saturated liquid at 0.01 °C. The R-134a tables set h and s to zero for saturated liquid at −40 °C.</p>
+<ol>
+  <li>Dome's h, u and s count from the same references as the tables. So h of water and h of R-134a count from different zeros, and a difference of the two has no meaning. <a href="two-fluids.html#one-balance">Two fluids</a> shows a balance with both.</li>
+  <li><code>water</code>, <code>r134a</code>, <code>r134a_book</code>, <code>r22</code>, <code>ammonia</code> and <code>propane</code> have liquid, two-phase and vapor states. <a href="#r134a-book">Dome's values and the tables</a>, below, says when to write <code>r134a_book</code>.</li>
+  <li><code>air</code>, <code>nitrogen</code>, <code>oxygen</code>, <code>carbondioxide</code> and <code>carbonmonoxide</code> are ideal gases with variable specific heats. Their h is zero at 0 K. Air has values from 100 to 3500 K, the others from 220 to 3250 K.</li>
+  <li><code>water_ig</code> is water vapor as an ideal gas, with h from 0 K. Its h differs from that of <code>water</code> by a constant, so Dome reports an error where the two meet in one equation.</li>
+  <li>The h, u and s of an ideal gas are per kg. <code>h(n2, T = 298 [K], p = 1 [atm])*M(n2)</code> is the molar enthalpy, 8663.7 kJ/kmol.</li>
+  <li><code>moistair</code> has property functions and no state lines.</li>
+  <li>A fluid's name may be typed in capitals or lower case. The <a href="reference.html#fluids">Reference</a> page lists the other names each fluid accepts, such as <code>h2o</code> and <code>n2</code>.</li>
+  <li>A name Dome does not know is an error whose message lists the names it knows. <a href="#unknown-fluid">When a state is refused</a> shows it.</li>
+</ol>
+
+<h2 id="agreement">Dome's values and the tables</h2>
+<p>A rigid tank holds R-134a at 100 °C. It is cooled until the R-134a is saturated vapor at 20 °C. This sheet finds the heat transfer per unit mass.</p>
+<pre><code>fluid r134a
+state 1 : T = 100 [C], v = v_2
+state 2 : T = 20 [C], x = 1
+q = u_2 - u_1</code></pre>
+<p>Dome gives q = −68.26 kJ/kg. Worked from the textbook's tables, q is −71.11 kJ/kg. With <code>fluid r134a_book</code> in the first line, Dome gives −71.144 kJ/kg.</p>
+<p>Dome's h can differ from the tables' by about 1 kJ/kg, and by up to about 5 kJ/kg in parts of the superheated tables. An answer built from such values can differ by a few percent: in this tank, by 4 %.</p>
+<p id="r134a-book">For answers that match the textbook's R-134a tables, write <code>fluid r134a_book</code>. <a href="reference.html#agreement-rules">Reference</a> gives the differences fluid by fluid, and the range of <code>r134a_book</code>.</p>
+
 <h2 id="diagrams">Diagrams</h2>
-<p>A plot line draws a property diagram of states of the sheet: <code>Ts</code>, <code>Tv</code>, <code>pv</code>, <code>ph</code> or <code>hs</code>. The T–v and p–v diagrams have v on a logarithmic axis. Between two state labels, a path names the property held constant.</p>
+<p>A plot line draws the states of the sheet on a property diagram. These two lines draw the four states of the first sheet on a T–s and a p–h diagram.</p>
+<pre><code>fluid water
+p_b = 15 [bar]
+state 1 : p = p_b, T = 50 [C]
+state 2 : p = p_b, x = 0.3
+state 3 : p = p_b, h = 2200 [kJ/kg]
+state 4 : p = p_b, T = 320 [C]
+plot Ts : 1 -p- 2 -p- 3 -p- 4
+plot ph : 1 -p- 2 -p- 3 -p- 4</code></pre>
+<p>Dome draws one figure for each plot line and names it at the right of the line. Each figure has its own tab in the figure pane.</p>
+<ol>
+  <li>Write <code>plot</code>, the diagram, a colon, and the state labels joined by paths. The diagrams are <code>Ts</code>, <code>Tv</code>, <code>pv</code>, <code>ph</code> and <code>hs</code>.</li>
+  <li>A path between two labels names the property held constant, as in the table below.</li>
+  <li>T–v and p–v have v on a logarithmic axis, and p–v and p–h have p on one.</li>
+  <li>A figure shows the states of one fluid. A state of another fluid gets a note on the figure, such as "state 3 is water; this figure is r134a".</li>
+  <li>The buttons in the pane's header zoom to a box, fit the view to the data, show data tips and export the figure.</li>
+  <li>The boxes under the figure show or hide the previous run, the saturation dome, and the isobars (isotherms on p–v and p–h).</li>
+  <li>Isobars run flat through the dome. Those at the pressures of the figure's states are darker and labelled, so each process at constant pressure lies on a labelled line. Isotherms on p–v and p–h work the same way.</li>
+</ol>
 <table class="plain">
   <thead><tr><th>Path</th><th>Process</th></tr></thead>
   <tbody>
@@ -89,9 +131,6 @@ T_dp1 = Tdp(moistair, p = p, T = T_1, phi = phi_1)</code></pre>
     <tr><td><code>--</code></td><td>A straight line.</td></tr>
   </tbody>
 </table>
-<pre><code>plot Ts : 1 -p- 2 -p- 3 -p- 4
-plot ph : 1 -p- 2 -p- 3 -p- 4</code></pre>
-<p>Each plot line is one figure, with its own tab in the figure pane. The buttons in the pane's header zoom to a box, fit the view to the data, show data tips and export the figure. The boxes under the figure show or hide the previous run, the saturation dome, and the isobars or isotherms. The isobars run through the dome, flat where the fluid is two-phase, and those at the pressures of the figure's states are drawn darker and labelled with their values, so each isobaric process lies on a labelled line; on p–v and p–h diagrams the same holds for isotherms.</p>
 <figure class="shot wm" style="--fw:929;--fwpx:929px;--nwpx:565px;--ar:929/534;--il:21.74%;--it:4.12%;--iw:56.51%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 929 534" aria-hidden="true"><line x1="168" y1="44.5" x2="194.75" y2="44.5"/><line x1="761" y1="56.25" x2="574.98" y2="17.5"/><line x1="761" y1="18.75" x2="670.98" y2="17.5"/><line x1="168" y1="470.8" x2="350.77" y2="470.8"/><line x1="168" y1="508.3" x2="431.38" y2="470.8"/></svg>
@@ -107,8 +146,22 @@ plot ph : 1 -p- 2 -p- 3 -p- 4</code></pre>
   </ol></figcaption>
 </figure>
 
-<h2>Dragging a state</h2>
-<p>A state can be dragged along an axis of the figure when the property it is given on that axis is an input of the sheet. An input is a line <code>name = number [unit]</code>, or a number written in a state line (<code>x = 0</code> in state 3 makes <code>x_3</code> an input), so <code>T = T_4</code> with <code>T_4 = 320 [C]</code> qualifies, and so does <code>T = 320 [C]</code> written in the state line. A ring marks each such state. The axes hold still while the state is dragged, and the value moves by as much as the pointer moves from where the drag began; a state dragged to the edge of the plot stops there, and the axes fit the data again on release. The new value is written where the number stands, and the sheet is solved again.</p>
+<h2 id="drag">Dragging a state</h2>
+<p>A state on a figure can be dragged when a number in the sheet fixes it along an axis. Here T_4 fixes state 4, and T is the vertical axis of the T–s diagram.</p>
+<pre><code>fluid water
+p_b = 15 [bar]
+T_4 = 320 [C]
+state 1 : p = p_b, T = 50 [C]
+state 4 : p = p_b, T = T_4
+plot Ts : 1 -p- 4</code></pre>
+<p>A ring marks state 4 as one that can be dragged. Dragging it up writes a higher T_4 into the sheet, and Dome solves again.</p>
+<ol>
+  <li>A state can be dragged along an axis when the property it is given on that axis is an input of the sheet.</li>
+  <li>An input is a line <code>name = number [unit]</code>, such as <code>T_4 = 320 [C]</code>, or a number written in a state line. <code>T = 320 [C]</code> in the state line works as well.</li>
+  <li>Dome holds the axes still while the state is dragged. The value moves by as much as the pointer moves from where the drag began.</li>
+  <li>A state dragged to the edge of the plot stops there. On release, the axes fit the data again, and a second drag goes further.</li>
+  <li>The new value is written where the number stands in the sheet.</li>
+</ol>
 <figure class="shot wm" style="--fw:929;--fwpx:929px;--nwpx:565px;--ar:929/534;--il:21.74%;--it:4.12%;--iw:56.51%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 929 534" aria-hidden="true"><line x1="761" y1="154.4" x2="598.65" y2="154.4"/><line x1="168" y1="197.67" x2="341.67" y2="197.67"/><line x1="761" y1="490.8" x2="721.98" y2="490.8"/></svg>
@@ -122,8 +175,24 @@ plot ph : 1 -p- 2 -p- 3 -p- 4</code></pre>
   </ol></figcaption>
 </figure>
 
-<h2>The previous run</h2>
-<p>After a line is edited, Dome shows what changed: the edited line is tinted and shows the previous value of an input, values that changed show the change beside them, the changed variables and states are tinted in the Workspace and the states table, and figures draw the previous run dashed with a legend naming the change. The previous run is the run from before the edit of the line began: the edit ends when the cursor leaves the line, on Enter, when the sheet loses focus, or after 10 seconds without typing, so a pause in the middle of a line does not replace it. A line added that leaves the figure as it was, such as a check line, draws no previous run. Below, the boiler pressure <code>p_b</code> of the second example was changed from 15 bar to 30 bar.</p>
+<h2 id="previous-run">The previous run</h2>
+<p>After an edit, Dome shows what changed. This is the first sheet with a T–s plot line, after p_b was changed from 15 bar to 30 bar.</p>
+<pre><code>fluid water
+p_b = 30 [bar]
+state 1 : p = p_b, T = 50 [C]
+state 2 : p = p_b, x = 0.3
+state 3 : p = p_b, h = 2200 [kJ/kg]
+state 4 : p = p_b, T = 320 [C]
+q_14 = h_4 - h_1
+plot Ts : 1 -p- 2 -p- 3 -p- 4</code></pre>
+<p>Dome gives q_14 = 2832.2 kJ/kg and shows the change beside the value. The shot shows Help › Examples › States and properties (water) after the same edit.</p>
+<ol>
+  <li>The edited line is tinted and shows the previous value of the input.</li>
+  <li>Values that changed show the change beside them. Changed variables and states are tinted in the Workspace and in the states table.</li>
+  <li>Figures draw the previous run dashed, with a legend naming the change. The Previous run box under the figure shows or hides it.</li>
+  <li>The previous run is the run from before the edit of the line began. The edit ends when the cursor leaves the line, on Enter, when the sheet loses focus, or after 10 seconds without typing.</li>
+  <li>A line added that leaves the figure as it was, such as a check line, draws no previous run.</li>
+</ol>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="168" y1="129.53" x2="557.92" y2="129.53"/><line x1="168" y1="380.02" x2="202.57" y2="380.02"/><line x1="1032" y1="117.35" x2="846.04" y2="117.35"/><line x1="1032" y1="328.41" x2="707.72" y2="328.41"/><line x1="1032" y1="407.75" x2="1003.64" y2="407.75"/></svg>
@@ -138,8 +207,65 @@ plot ph : 1 -p- 2 -p- 3 -p- 4</code></pre>
     <li><b>Changed state.</b> States whose properties changed are tinted.</li>
   </ol></figcaption>
 </figure>
+
+<h2 id="state-refused">When a state is refused</h2>
+<p>Each entry gives a sheet, the message Dome shows for it, and what to change.</p>
+
+<h3>p and T on the saturation line</h3>
+<pre class="refused"><code>fluid water
+state 1 : p = 1 [atm], T = 100 [C]</code></pre>
+<p class="msg">state 1: water: T = 100.00 °C is within 0.15 K of the saturation temperature at 1.013 bar (99.97 °C), where p and T do not fix the state; give x (or v, u, h or s) instead of one of them</p>
+<p>At saturation, p and T do not say how much is liquid. Give x in place of T, such as <code>x = 1</code> for saturated vapor.</p>
+
+<h3>A pair that fits two states</h3>
+<pre class="refused"><code>fluid water
+state 1 : x = 1, h = 2675 [kJ/kg]</code></pre>
+<p class="msg">state 1: water: x and h fit 2 different states (T = 99.59 °C, p = 0.9996 bar; T = 327.64 °C, p = 124.7 bar); give p or T instead of one of them</p>
+<p>Saturated vapor has this h at two pressures. Give the pressure or temperature the problem states in place of h.</p>
+
+<h3>A value outside the property data</h3>
+<pre class="refused"><code>fluid water
+state 1 : p = 15 [bar], T = 2500 [C]</code></pre>
+<p class="msg">state 1: water: T = 2500.00 °C is above the highest temperature of the property data (1926.85 °C)</p>
+<p>Check the value and its unit. The message gives the limit of the data.</p>
+
+<h3>A quality outside 0 to 1</h3>
+<pre class="refused"><code>fluid water
+state 1 : p = 15 [bar], x = 1.2</code></pre>
+<p class="msg">state 1: quality x = 1.2 is outside 0 to 1</p>
+<p>x is a fraction: 85 % is <code>x = 0.85</code>.</p>
+
+<h3>One property, or the same one twice</h3>
+<pre class="refused"><code>fluid water
+state 1 : p = 15 [bar]</code></pre>
+<p class="msg">state 1 needs exactly two properties; it has 1</p>
+<p>Give two different properties. <code>state 1 : p = 15 [bar], p = 10 [bar]</code> gives "state 1 gives p twice".</p>
+
+<h3 id="unknown-fluid">A missing or unknown fluid</h3>
+<pre class="refused"><code>fluid steem
+state 1 : p = 1 [bar], x = 1</code></pre>
+<p class="msg">unknown fluid "steem"; available: water, r134a, r134a_book, r22, ammonia, propane, air, nitrogen, oxygen, carbondioxide, carbonmonoxide, water_ig, moistair</p>
+<p>Correct the name to one in the list. A state line with no <code>fluid</code> line above it gets "state 1 has no fluid", with the line to add.</p>
+
+<h3>R-134a outside the tables' range</h3>
+<pre class="refused"><code>fluid r134a_book
+state 1 : T = 220 [C], p = 10 [bar]</code></pre>
+<p class="msg">state 1: R-134a (book): T = 220.00 °C is outside the range of the textbook's R-134a tables, to which r134a_book is limited (-47.48 to 204.44 °C, up to 39.74 bar); r134a covers it</p>
+<p>Write <code>fluid r134a</code> for this state, and for every other R-134a state in the same balance.</p>
+
+<h3>Two references for one substance</h3>
+<pre class="refused"><code>p = 1 [bar]
+q = h(water, T = 100 [C], x = 1) - h(water_ig, T = 100 [C], p = p)</code></pre>
+<p class="msg">water appears here from the steam tables, h(water, …), and from the ideal-gas model, h(water_ig, …); use one for water in every term: h(water, …) for every water term.</p>
+<p>Write every water term with <code>h(water, …)</code>. The same holds for R-134a from <code>r134a</code> and <code>r134a_book</code>.</p>
+
+<h2 id="references" class="lookup">One reference in a balance</h2>
+<p>Each fluid's h, u and s count from a reference of its own. A balance must take each substance from one reference. <a href="two-fluids.html#one-balance">Two fluids</a> and <a href="moist-air.html#one-way">Moist air</a> show balances that do, and <a href="reference.html#reference-rules">Reference</a> gives the rules in full.</p>
+
+<h2 id="moist-air" class="lookup">Moist air</h2>
+<p>Moist air has a page of its own: <a href="moist-air.html">Moist air</a>.</p>
 </main>
-<nav class="pager" aria-label="Pages"><a class="prev" href="sheet.html"><span>Previous</span>Writing a sheet</a><a class="next" href="cycle.html"><span>Next</span>A complete cycle</a></nav>
+<nav class="pager" aria-label="Pages"><a class="prev" href="sheet.html"><span>Previous</span>Writing a sheet</a><a class="next" href="two-fluids.html"><span>Next</span>Two fluids</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Writing a sheet · Dome manual</title>
-<meta name="description" content="Equations, units, temperatures, comments and sections, checks, starting values, functions and tables, integrals and derivatives, the Problems tab and its fixes, the Math view, and the language reference.">
+<meta name="description" content="Equations and units, temperatures, comments and sections, problems and their fixes, checks and starting values, functions, tables, integrals and derivatives, the messages Dome gives, the Math view, and keys.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="manual.css">
 </head>
@@ -17,24 +17,27 @@
 </header>
 <main class="page">
 <h1>Writing a sheet</h1>
-<p class="lede">A sheet is a list of statements, one per line or separated by semicolons. Dome solves the sheet as a system: the order of the lines does not matter, and an unknown may sit on either side of an equation. This page follows the first example, Help › Examples › First sheet: equations and units.</p>
+<p class="lede">A sheet is a list of statements: given values, equations, and lines such as <code>check</code> and <code>table</code>. Dome solves the equations together, so their order does not matter. Each section below starts from a sheet you can copy into Dome, shows what Dome gives, and then lists the rules.</p>
 
-<h2>Equations and units</h2>
+<h2 id="equations">Equations and units</h2>
+<p>A gas expands at constant pressure while it does 6 kJ of work on a piston. This sheet finds its final volume and temperature.</p>
 <pre><code>p   = 2 [bar]
 V_1 = 40 [L]
 T_1 = 27 [C]
 W   = 6 [kJ]
 W = p * (V_2 - V_1)
 T_2 / T_1 = V_2 / V_1</code></pre>
-<ul>
-  <li id="equations"><strong>Equations.</strong> <code>a = b</code> in any arrangement. Dome matches equations to unknowns, evaluates the explicit ones directly and solves the rest by iteration. Equations that repeat each other, contradict each other or leave a variable undetermined are reported on their line.</li>
-  <li id="units"><strong>Units.</strong> A unit follows a number in square brackets. Everything after a slash is in the denominator, so <code>[kJ/kg·K]</code> is kJ/(kg·K); <code>*</code>, <code>^</code> and parentheses also work. Values are converted to SI on entry, so bar, kPa, L and kJ can be mixed. A number without a unit where one is needed is an error, except 0, which is zero in any unit: a balance can be written with 0 on one side, <code>0 = Q - W + mdot*(h_1 - h_2)</code>, and W takes the unit of the other terms. A 0 set equal to a temperature still needs a unit, since 0 °C and 0 K differ. A number without a unit where nothing requires one is a plain number: with <code>W_net = 100</code> and <code>W_net = mdot*(h_1 - h_2)</code>, mdot comes out in s^2/m^2. A result in a unit that no usual quantity has is warned on when a number written without a unit explains it, through a root too (V in <code>V = sqrt(2*KE/m)</code> with <code>KE = 500</code> is in 1/kg^0.5), and the warning names that number; a result whose unit follows from the units written is not, such as the constant c of <code>p*V^(-1) = c</code>, or C in <code>C = p_1*V_1^1.3</code> with a ratio <code>r = 5</code> in <code>V_1 = r*V_2</code>. A unit with a fractional exponent is warned on only through a root, so <code>p_1 = 100</code> in that line is not named either. The base of a power takes a unit only when its exponents are whole, so V in <code>KE = 0.5*m*V^2</code> with <code>KE = 500</code> is left without one. An exponent within 1e-9 of a multiple of 1e-6 is that multiple, so <code>W = C*(V_2^(-0.3) - V_1^(-0.3))/(-0.3)</code> with <code>C = p_2*V_2^1.3</code> is an energy, though floating point leaves its exponent of m at 2.0000000000000004. An exponent made only of numbers is worked out, so <code>V_2^(1 - 1.3)</code> is <code>V_2^(-0.3)</code> and <code>D = V^(1/3)</code> with V in [m^3] is in m. A quantity shown in a unit of its own, such as K/s for a rate of temperature change, m³/s, m/s², N/m and W/(m·K) (in English units in an English sheet), is a usual one, except a thermal resistance (K/W) and a mass flux (kg/(m²·s)), which are shown in theirs but still warned on, since a heat rate or an area given without its unit makes one.</li>
-  <li><strong>Unit conversion.</strong> Dividing by a unit gives a plain number in that unit: <code>p_kPa = p / (1 [kPa])</code>.</li>
-  <li><strong>Other units.</strong> <code>[ton]</code> is the ton of refrigeration, 200 Btu/min, and <code>[mile]</code> is 5280 ft. <code>[rpm]</code> is revolutions per minute as a frequency, so <code>omega = 2*pi*N</code> with N in [rpm] is in rad/s, shown as 1/s. Electric current is a dimension of its own, with the units <code>A</code>, <code>mA</code>, <code>V</code>, <code>kV</code> and <code>Ω</code> (or <code>ohm</code>): a volt is a watt per ampere, so <code>E*i</code> is a power and <code>E/i</code> a resistance.</li>
-  <li><strong>pi.</strong> <code>pi</code> is the constant π, unless the sheet has a line <code>pi = …</code>, which gives its own value.</li>
-  <li><strong>Molar units.</strong> Amount of substance has the units <code>mol</code>, <code>kmol</code> and <code>lbmol</code>, so <code>M = 28.01 [kg/kmol]</code>, <code>n = m / M</code> and <code>R_u = 8.314 [kJ/kmol/K]</code> carry checked units. Molar quantities are shown in kmol, or lbmol in English units.</li>
-  <li><strong>Values shown.</strong> SI or English in the header sets the units results are shown in.</li>
-</ul>
+<p>Dome gives V_2 = 0.07 m³ and T_2 = 525.26 K, each at the right of the line that finds it. While Auto-solve is checked in the header, Dome solves the sheet after each edit.</p>
+<ol>
+  <li>Write one statement on each line, or separate statements with semicolons: <code>x = 3; y = 4</code>.</li>
+  <li>Write an equation as <code>a = b</code>, arranged in any way. An unknown may be on either side, as V_2 is above, and the lines may come in any order.</li>
+  <li id="units">Write a unit in square brackets after each number: <code>40 [L]</code>. Dome converts every value to SI as it reads it, so bar, L and kJ can be mixed in one equation.</li>
+  <li>In a unit, everything after a slash is in the denominator: <code>[kJ/kg·K]</code> is kJ/(kg·K). Units also combine with <code>*</code>, <code>^</code> and parentheses, as in <code>[m^3/kg]</code>.</li>
+  <li>A 0 needs no unit. In <code>0 = Q - W + mdot*(h_1 - h_2)</code>, the 0 takes the unit of the other terms. A 0 given for a temperature needs one, since 0 °C and 0 K differ.</li>
+  <li>To show a value in another unit, divide it by that unit: <code>p_kPa = p / (1 [kPa])</code> gives 200.</li>
+  <li>The SI and English buttons in the header set the units Dome shows. With English, the sheet above gives V_2 = 2.472 ft³ and T_2 = 945.47 °R.</li>
+</ol>
+<p>Help › Examples › First sheet: equations and units opens this sheet with comments, a temperature change, two unit conversions and a check line.</p>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="168" y1="130.89" x2="358.74" y2="130.89"/><line x1="168" y1="267.33" x2="358.74" y2="267.33"/><line x1="1032" y1="286.35" x2="629.19" y2="286.35"/><line x1="1032" y1="205.39" x2="1004.26" y2="205.39"/><line x1="1032" y1="392.2" x2="1003.64" y2="392.2"/></svg>
@@ -51,63 +54,51 @@ T_2 / T_1 = V_2 / V_1</code></pre>
 </figure>
 
 <h2 id="temperatures">Temperatures and temperature changes</h2>
-<p><code>[C]</code>, <code>[K]</code>, <code>[F]</code> or <code>[R]</code> alone is a temperature. Dome holds temperatures in kelvin, so a ratio such as <code>T_2 / T_1</code> is a ratio of absolute temperatures. A change in temperature is written in <code>[K]</code> or <code>[R]</code>: <code>T_1 + 20 [K]</code> with <code>T_1 = 27 [C]</code> is 47 °C. A negative value in <code>[K]</code> or <code>[R]</code>, such as <code>dT = -10 [K]</code>, is a change.</p>
-<p id="temperature-in-sum">A <code>[C]</code> or <code>[F]</code> number in a sum or difference is written in parentheses, <code>(25 [C]) + dT</code>, and a bare one there is refused, because a change typed in °C is the usual slip. The message offers both rewrites as fixes, the change <code>25 [K]</code> and the temperature <code>(25 [C])</code>; which one the sheet means is for the student to choose.</p>
-<p id="hand-conversion">Dome works in kelvin, so a conversion by hand, <code>T_H + 273.15 [K]</code>, is refused: it would count the offset twice. Its fix removes <code>+ 273.15 [K]</code> and leaves <code>T_H</code>.</p>
-<p id="temperature-or-change">A name makes no difference: <code>dT = 10 [C]</code> is the temperature 10 °C, and a change of 10 K is <code>dT = 10 [K]</code>. A value given in <code>[K]</code> or <code>[R]</code> is an amount in kelvin, shown in the unit typed, and is a temperature or a change as the equations use it. A sum of temperatures is a temperature only as an average, such as <code>(T_1 + T_2)/2</code>, and a change when its coefficients add to 0, as in <code>T_2 - T_1</code>; <code>T_1 + T_2</code> used as it stands is refused. A value is shown in °C only where the equations make it a temperature for certain, such as the T of a state or of a property function; T_1 from <code>p*v_1 = R*T_1</code> may be a temperature or a change, and is shown in K, which reads correctly either way. A change given as the T of a state or of a property function, such as <code>T_x</code> after <code>T_x = T_a - T_b</code>, is an error on its line: read as a temperature, a change of 30 K would be a temperature of 30 K.</p>
+<pre><code>T_1 = 27 [C]
+T_2 = 80 [C]
+dT  = T_2 - T_1
+T_a = T_1 + 20 [K]
+T_m = (T_1 + T_2)/2
+r   = T_2 / T_1</code></pre>
+<p>Dome gives dT = 53 K, T_a = 47 °C, T_m = 53.5 °C and r = 1.1766.</p>
+<ol>
+  <li>A number in <code>[C]</code> or <code>[F]</code> is a temperature. A number in <code>[K]</code> or <code>[R]</code> is a temperature or a change, as the equations use it.</li>
+  <li>Write a change in temperature in <code>[K]</code> or <code>[R]</code>: <code>T_1 + 20 [K]</code> is 20 K above T_1.</li>
+  <li>Dome holds every temperature in kelvin, so <code>T_2 / T_1</code> is a ratio of absolute temperatures. Use T_1 itself in every equation, never <code>T_1 + 273.15 [K]</code>.</li>
+  <li>A difference of two temperatures is a change, shown in K. An average, such as <code>(T_1 + T_2)/2</code>, is a temperature. Dome refuses a plain sum, <code>T_1 + T_2</code>.</li>
+  <li>In a sum or difference, write a <code>[C]</code> or <code>[F]</code> number in parentheses: <code>(25 [C]) + dT</code>. Without them, Dome cannot tell a temperature from a change.</li>
+  <li>A name makes no difference: <code>dT = 10 [C]</code> is the temperature 10 °C. A change of 10 K is <code>dT = 10 [K]</code>.</li>
+  <li>Dome shows a value in °C only where it is certainly a temperature, such as the T of a state. Other values are shown in K, as T_2 is in the first sheet.</li>
+  <li>On an English sheet, °F and °R take the places of °C and K.</li>
+</ol>
 
-<h2>Comments and sections</h2>
-<p>Text after <code>%</code> is a comment. <code>%%</code> at the start of a line begins a section in published reports; the first section's text is the report's default title.</p>
-<pre><code>%% Boundary work
-% Equations can be written in any order.
+<h2 id="comments">Comments and sections</h2>
+<pre><code>%% Boundary work at constant pressure
+% Given values
+p   = 2 [bar]
+V_1 = 40 [L]
+W   = 6 [kJ]
+
+%% Final volume
 W = p * (V_2 - V_1)    % work done by the gas</code></pre>
+<p>Dome gives V_2 = 0.07 m³. Comments and blank lines change nothing in the solve.</p>
+<ol>
+  <li>Text after <code>%</code> is a comment, on a line of its own or after a statement.</li>
+  <li>A line that starts with <code>%%</code> begins a section of a published report.</li>
+  <li>The first section's text is the report's default title, here "Boundary work at constant pressure".</li>
+</ol>
 
-<h2>Checks and starting values</h2>
-<ul>
-  <li id="checks"><strong>check</strong> compares two expressions after the sheet is solved: <code>check V_2 &gt; V_1</code>. The comparisons are <code>==</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;</code> and <code>&gt;</code>. The result appears at the right of the line and under the Checks tab. The two sides are checked for units as an equation's are, so <code>check T_1 &gt; 5 [bar]</code> is an error on its line and <code>check T_1 &gt; 300</code> needs a unit after the 300; a check line with an error is not evaluated.</li>
-  <li id="two-answers"><strong>Two answers.</strong> When two values of a variable satisfy an equation, as for <code>x^2 - 5*x + 6 = 0</code>, a check line on that variable chooses between them: with <code>check x &gt; 2.5</code>, Dome uses 3. Without one, Dome uses the value its iteration reaches from the starting value and names both values in a warning on the line, with a check line that chooses between them, which the warning's fix adds below the line; a value of the other sign, such as the negative speed from <code>V_2^2</code>, is not counted. Equations solved together are searched too: when two solutions satisfy them, as for <code>x + y = 5</code> with <code>x*y = 6</code>, or a gas turbine of given net work at two pressure ratios, each line of the block names both, with a check line that the warning's fix adds below that line, and a check line on any of its unknowns, such as <code>check x &gt; 2.5</code>, chooses. So does a check line on a name found from them by one more equation in which it enters linearly, such as <code>check r_p &gt; 12</code> for a gas turbine whose state 2 is written <code>p = 100 [kPa]*r_p</code>. Dome reports a second answer when its search finds one; the search of equations solved together adds at most a few milliseconds to a solve, and either search can miss a value close to the one used, so a line with no warning may still have a second answer.</li>
-  <li id="guess"><strong>guess</strong> sets the starting value of a variable found by iteration: <code>guess T_2 = 400 [K]</code>. Dome takes a starting value from the units of each unknown, never from its name: 5 % above the median of the known values in the same units, or else 300 K for a temperature, 1 bar for a pressure, 100 kJ/kg for a specific energy and so on, 0.5 for a value without units and 0.005 for a humidity ratio given to a moist-air function. A sheet rarely needs a guess line. One is for a solve that Dome reports could not start, or found no solution from its starting values. A guess line on a name found by one equation from an unknown, such as <code>guess r_p = 30</code> beside <code>p = 100 [kPa]*r_p</code>, starts that unknown at the value the equation gives. A guess line gives only the start: with two answers, the warning stays until a check line chooses.</li>
-</ul>
-
-<h2 id="functions">Functions</h2>
-<p>A function is a formula written once and used in several places. It takes one line: the word <code>function</code>, a name, the parameters in parentheses, and one expression.</p>
-<pre><code>function cp_air(T) = 1.0 [kJ/kg/K] + 1e-4 [kJ/kg/K^2]*(T - 300 [K])
-q = cp_air(T_2)*(T_2 - T_1)</code></pre>
-<ul>
-  <li><strong>Calls.</strong> A call gives one argument for each parameter, in order. Dome replaces each call with the body, the arguments in place of the parameters, before it solves the sheet, so a call may sit in any equation, state line or check, and an unknown may sit inside it. Units are worked out for each call, so <code>function sq(a) = a*a</code> gives m² from <code>sq(2 [m])</code> and s² from <code>sq(3 [s])</code>.</li>
-  <li><strong>The body.</strong> The body may use the parameters, numbers with units, math and property functions, other functions of the sheet and the sheet's variables. A sheet variable in the body is an input of every call.</li>
-  <li><strong>Names.</strong> A function cannot call itself, directly or through another function. Its name cannot be a built-in function such as <code>h</code> or <code>ln</code>, a keyword such as <code>state</code>, or a variable of the sheet.</li>
-  <li><strong>Problems.</strong> An error inside the body, such as a number without a unit, is reported on the line of the call and names the function. A call that, written out with every call inside it expanded, has more than 20000 symbols is refused: each nested call that uses its parameter twice doubles the length.</li>
-</ul>
-
-<h2 id="tables">Tables</h2>
-<p>A table holds data given as rows of numbers, such as rows copied from a property table. The header line names the table and each column with its unit; the rows follow on indented lines, numbers separated by commas. A blank or unindented line ends the table, and a <code>%</code> comment may follow a row or stand on an indented line of its own. Saturated R-134a, two rows typed from a table around a final state found from its specific volume:</p>
-<pre><code>table a10 : T [C], v_g [m^3/kg], u_g [kJ/kg]
-  12, 0.0460, 233.63
-  16, 0.0405, 235.78
-interp(a10, v_g, T = T_2) = v_1
-u_2 = interp(a10, u_g, T = T_2)</code></pre>
-<ul>
-  <li><strong>interp.</strong> <code>interp(a10, u_g, T = T_2)</code> is the value of column <code>u_g</code> at <code>T = T_2</code>, by linear interpolation between the two rows around it, as by hand from a printed table. The key column, here <code>T</code>, must increase or decrease throughout. A key outside the table is an error that gives the table's range.</li>
-  <li><strong>Unknowns.</strong> An unknown may sit in the key, so a table is read in either direction: the first line above finds <code>T_2</code> from <code>v_g = v_1</code>. When the column read rises and falls, two keys give the same value, and Dome reports both, as for any equation with two answers.</li>
-  <li><strong>Units.</strong> Each column carries its unit into the units check. A column in <code>[C]</code> or <code>[F]</code> is a temperature, and a key that the equations make a change for certain, such as <code>T_2 - T_1</code> after <code>T_1 = 20 [C]</code> and <code>T_2 = 70 [C]</code>, is an error on its line. A column in <code>[K]</code> or <code>[R]</code> is an amount in kelvin, whatever its name, and is read by value.</li>
-</ul>
-
-<h2 id="integrals">Integrals and derivatives</h2>
-<p><code>integral(expression, x, a, b)</code> is the integral of the expression over x from a to b, and <code>der(expression, x, value)</code> its derivative with respect to x at x = value. They give what a sheet has no closed form for: boundary work when p is a function or a table of V, a change in h from c<sub>p</sub> given as a function or a table, a change in s from dh/T.</p>
-<pre><code>p_1 = 100 [kPa]; V_1 = 0.1 [m^3]; V_2 = 0.04 [m^3]
-C = p_1*V_1^1.3
-W = integral(C/V^1.3, V, V_1, V_2)
-c_p = der(h(water, p = 1 [bar], T = T), T, 50 [C])</code></pre>
-<ul>
-  <li><strong>The variable.</strong> x belongs to the call. Inside the expression its name means the call's variable, never a variable of the sheet, and a sheet variable with the same name keeps its value; in the limits the name means the sheet's variable. The expression may use the sheet's other variables, functions of the sheet, <code>interp()</code> with x as the key, and property functions with x as an input, as in <code>integral(1/T(water, p = p_1, h = h), h, h_1, h_2)</code>.</li>
-  <li><strong>Units.</strong> x takes the units of its limits, which must be the same; a 0 without a unit takes those of the other limit. Over a range of temperatures x is a temperature. An integral is in the units of the expression times those of x, a derivative in the units of the expression over those of x.</li>
-  <li><strong>Unknowns.</strong> A limit, the point of a derivative or a variable in the expression may be an unknown: with <code>W = 15 [kJ]</code> given, the integral line above finds <code>V_2</code>.</li>
-  <li><strong>Accuracy.</strong> An integral is found by adaptive Gauss–Kronrod quadrature to an estimated error of 1 part in 10<sup>10</sup> of the integral of the absolute value of the expression, and a table read with x as the key is integrated exactly between its rows. A derivative is found by central differences extrapolated to a step of zero (Ridders' method), to 1 part in 10<sup>6</sup> or better. An expression that a property function or a table refuses at some value of x, or that is infinite in the range, is an error that gives that value; so is a derivative at a kink, as at a phase boundary, where the slopes on the two sides differ.</li>
-</ul>
-
-<h2 id="problems">Problems</h2>
-<p>A line Dome cannot use is underlined in the sheet, and the Problems tab lists it with its line number and the reason. Holding the pointer over the underline shows the reason in the sheet. Below, the line <code>Q = W + dU</code> was added to the first example; nothing else in the sheet determines <code>dU</code>, so the sheet has fewer equations than unknowns.</p>
+<h2 id="problems">Problems and fixes</h2>
+<p>This is the first sheet with one more line. Nothing else in the sheet determines dU, so Dome cannot use the last line.</p>
+<pre class="refused"><code>p   = 2 [bar]
+V_1 = 40 [L]
+T_1 = 27 [C]
+W   = 6 [kJ]
+W = p * (V_2 - V_1)
+T_2 / T_1 = V_2 / V_1
+Q = W + dU</code></pre>
+<p class="msg">nothing determines dU: there are fewer equations than unknowns</p>
+<p>The shot shows the same line added to the first example.</p>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="168" y1="177.78" x2="358.74" y2="177.78"/><line x1="168" y1="350.17" x2="418.76" y2="350.17"/><line x1="1032" y1="391.89" x2="1003.64" y2="391.89"/></svg>
@@ -120,47 +111,198 @@ c_p = der(h(water, p = 1 [bar], T = T), T, 50 [C])</code></pre>
     <li><b>The reason.</b> Each problem with its line number and the reason. A click on it moves the cursor to the line.</li>
   </ol></figcaption>
 </figure>
-<p>Each message has an Explain button, which opens the section of this manual that gives its rule. A message that names an exact rewrite also has a button for it, under the message in the sheet and in the Problems tab, which makes the rewrite as one edit: <kbd>⌘</kbd><kbd>Z</kbd> undoes it. A message with two rewrites, one for each reading of what was typed, offers both and does not choose. A rewrite is offered only where the sheet passes the units check with it made: <code>T_1 + 50 [C]</code> offers <code>50 [K]</code> and not <code>(50 [C])</code>, which would add two temperatures. <kbd>⌘</kbd><kbd>.</kbd> makes the rewrite of the problem at the cursor, or of the problems on the cursor's line, when there is one; where there are more, it opens them as a choice at the cursor, where the arrow keys move, <kbd>Enter</kbd> makes one and <kbd>Esc</kbd> closes it. The rewrites:</p>
+<ol>
+  <li>A line Dome cannot use is underlined in the sheet. The pointer over the underline shows the message.</li>
+  <li>The Problems tab lists each error and warning with its line number and message. A click on one moves the cursor to its line.</li>
+  <li>Each message has an Explain button, which opens the section of this manual that gives its rule.</li>
+  <li>A message that names an exact rewrite has a button for it, under the message in the sheet and in the Problems tab. The button makes the rewrite as one edit, which <kbd>⌘</kbd><kbd>Z</kbd> undoes.</li>
+  <li>A message with two rewrites, one for each reading of the line, offers both and makes neither. Press <kbd>⌘</kbd><kbd>.</kbd> to make the rewrite at the cursor, or to open the choice when there are two.</li>
+</ol>
+<p><a href="#refuses">When Dome refuses</a>, below, gives the messages a new sheet meets most often. The <a href="reference.html#rewrites">Reference</a> page lists every rewrite.</p>
+
+<h2 id="checks">Checks and starting values</h2>
+<h3>Checking a result</h3>
+<pre><code>p   = 2 [bar]
+V_1 = 40 [L]
+W   = 6 [kJ]
+W = p * (V_2 - V_1)
+check V_2 &gt; V_1</code></pre>
+<p>Dome gives V_2 = 0.07 m³ and shows "passed" at the right of the check line. With <code>check V_2 &lt; V_1</code>, the line shows "failed".</p>
+<ol>
+  <li>A <code>check</code> line compares two expressions after the sheet is solved. The comparisons are <code>==</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;</code> and <code>&gt;</code>.</li>
+  <li>The result appears at the right of the line and under the Checks tab.</li>
+  <li>The two sides need units that match, as in an equation: <code>check T_1 &gt; 300</code> needs a unit after the 300.</li>
+  <li>Dome does not evaluate a check line that has an error on it.</li>
+</ol>
+
+<h3 id="two-answers">Choosing between two answers</h3>
+<pre><code>x^2 - 5*x + 6 = 0</code></pre>
+<p>Dome gives x = 2 and this warning:</p>
+<p class="msg">two values of x satisfy this equation, 2 and 3; Dome used 2. A check line such as "check x &gt; 2.5" chooses between them.</p>
+<p>With the line <code>check x &gt; 2.5</code> added, Dome gives x = 3 and no warning.</p>
+<ol>
+  <li>A check line on the variable chooses between two answers. The warning's button, <strong>Add the line "check x &gt; 2.5"</strong>, writes it below the equation.</li>
+  <li>Equations solved together are searched too. For <code>x + y = 5</code> with <code>x*y = 6</code>, both lines name the two solutions, and a check line on x or y chooses.</li>
+  <li>A value of the other sign is not counted: <code>V_2^2 = 100 [m^2/s^2]</code> gives V_2 = 10 m/s and no warning.</li>
+  <li>The search can miss a second answer, so a line with no warning may still have one.</li>
+</ol>
+
+<h3 id="guess">Starting values</h3>
+<pre><code>x^2 - 5*x + 6 = 0
+guess x = 2.6</code></pre>
+<p>Dome starts x at 2.6 and gives x = 3, with this warning:</p>
+<p class="msg">two values of x satisfy this equation, 2 and 3; Dome used 3. A check line such as "check x &lt; 2.5" chooses between them.</p>
+<ol>
+  <li>An unknown alone on one side of its equation, as q in <code>q = h_2 - h_1</code>, is computed at once. For any other unknown, Dome tries a value, sees how far the equation is from holding, and corrects the value until it holds. A <code>guess</code> line sets the first value tried.</li>
+  <li>Write a guess line only when Dome reports that a solve could not start, or found no solution from its starting values.</li>
+  <li>A guess line sets only the start. To choose between two answers, write a check line.</li>
+  <li>Without a guess line, an unknown starts from a value set by its units, never by its name. The <a href="reference.html#starting-values">Reference</a> page gives the rule.</li>
+</ol>
+
+<h2 id="functions">Functions</h2>
+<p>A function is a formula written once and used in several places. This one gives a specific heat that rises with temperature.</p>
+<pre><code>function cp_air(T) = 1.0 [kJ/kg/K] + 1e-4 [kJ/kg/K^2]*(T - 300 [K])
+T_1 = 300 [K]
+T_2 = 400 [K]
+q = cp_air(T_2)*(T_2 - T_1)</code></pre>
+<p>Dome gives q = 101 kJ/kg.</p>
+<ol>
+  <li>Write a function on one line: the word <code>function</code>, a name, the parameters in parentheses, <code>=</code>, and one expression.</li>
+  <li>A call gives one argument for each parameter, in order. A call may appear in any equation, <a href="states.html#state-lines">state line</a> or check, and an unknown may appear inside it.</li>
+  <li>The body may use the parameters, numbers with units, math and <a href="states.html#property-functions">property functions</a>, other functions of the sheet, and the sheet's variables.</li>
+  <li>A function cannot call itself, directly or through another function. Its name cannot be a built-in function such as <code>h</code> or <code>ln</code>, a keyword such as <code>state</code>, or a variable of the sheet.</li>
+  <li>An error inside the body is reported on the line of the call, and the message names the function.</li>
+</ol>
+
+<h2 id="tables">Tables</h2>
+<p>A table holds rows of numbers, such as rows typed from a property table. Two rows of saturated R-134a give the temperature at which saturated vapor has v = 0.0430 m³/kg, and u there.</p>
+<pre><code>table sat : T [C], v_g [m^3/kg], u_g [kJ/kg]
+  12, 0.0460, 233.63
+  16, 0.0405, 235.78
+v_1 = 0.0430 [m^3/kg]
+interp(sat, v_g, T = T_2) = v_1
+u_2 = interp(sat, u_g, T = T_2)</code></pre>
+<p>Dome gives T_2 = 14.182 °C and u_2 = 234.8 kJ/kg.</p>
+<ol>
+  <li>The header line names the table and each column with its unit.</li>
+  <li>The rows follow on indented lines, with numbers separated by commas. A blank or unindented line ends the table. A <code>%</code> comment may follow a row.</li>
+  <li><code>interp(sat, u_g, T = T_2)</code> is the value of column u_g at T = T_2, by linear interpolation between the two rows around it.</li>
+  <li>The key column, here T, must increase or decrease throughout. A key outside the table is an error that gives the table's range.</li>
+  <li>An unknown may be the key, so a table reads in either direction. The first interp line above finds T_2 from v_1.</li>
+  <li>A column in <code>[C]</code> or <code>[F]</code> holds temperatures. Dome refuses a key for it that is a change in temperature, such as <code>T_b - T_a</code>.</li>
+  <li>A column in <code>[K]</code> or <code>[R]</code> is read at the key's value in that unit, whether the key is a temperature or a change. With <code>T_1 = 27 [C]</code>, the key <code>T = T_1</code> reads it at 300.15 K. With T_a = 20 °C and T_b = 50 °C, the key <code>dT = T_b - T_a</code> reads it at 30 K.</li>
+</ol>
+
+<h2 id="integrals">Integrals and derivatives</h2>
+<p>An integral or a derivative gives what a sheet has no closed form for. This sheet finds the work of a compression with p V^1.3 constant, and c_p of liquid water at 50 °C as the slope of h.</p>
+<pre><code>p_1 = 100 [kPa]; V_1 = 0.1 [m^3]; V_2 = 0.04 [m^3]
+C = p_1*V_1^1.3
+W = integral(C/V^1.3, V, V_1, V_2)
+c_p = der(h(water, p = 1 [bar], T = T), T, 50 [C])</code></pre>
+<p>Dome gives W = -10.546 kJ and c_p = 4.1813 kJ/(kg·K).</p>
+<ol>
+  <li><code>integral(e, x, a, b)</code> is the integral of the expression e over x from a to b.</li>
+  <li><code>der(e, x, c)</code> is the derivative of e with respect to x at x = c.</li>
+  <li>The variable x belongs to the call. Inside e, its name means the call's variable, and a sheet variable with the same name keeps its value. In the limits, the name means the sheet's variable.</li>
+  <li>x takes the units of its limits, which must match. An integral is in the units of e times those of x, and a derivative in the units of e over those of x.</li>
+  <li>e may use the sheet's other variables, functions of the sheet, <code>interp()</code> with x as the key, and property functions with x as an input.</li>
+  <li>A limit, the point or a variable in e may be an unknown. With <code>W = -15 [kJ]</code> given in place of V_2, the integral line finds V_2 = 0.028981 m³.</li>
+</ol>
+
+<h2 id="refuses">When Dome refuses</h2>
+<p>Each entry gives a sheet, the message Dome shows for it, and what to change. The messages a new sheet meets most often come first.</p>
+
+<h3>A number without a unit</h3>
+<pre class="refused"><code>T_H = 500 [C]
+T_L = 25
+eta = 1 - T_L/T_H</code></pre>
+<p class="msg">this number needs a unit: by the equation on line 3, T_L is a temperature, so write e.g. 25 [C] or 25 [K]</p>
+<p>Write the unit you meant. The buttons <strong>Write 25 [C]</strong> and <strong>Write 25 [K]</strong> write either one; the two give different values of eta.</p>
+
+<h3>Units that do not match</h3>
+<pre class="refused"><code>mdot = 2 [kg/s]
+h_1 = 300 [kJ/kg]; h_2 = 250 [kJ/kg]
+Q = 20 [kW]
+W = Q + h_1 - h_2</code></pre>
+<p class="msg">units do not match: kW + kJ/kg</p>
+<p>Every term of a sum or difference needs the same units. Here the enthalpy change needs its mass flow rate: <code>W = Q + mdot*(h_1 - h_2)</code> gives W = 120 kW.</p>
+
+<h3>An equation that contradicts the others</h3>
+<pre class="refused"><code>p   = 2 [bar]
+V_1 = 40 [L]
+W   = 6 [kJ]
+W = p * (V_2 - V_1)
+V_2 = 0.08 [m^3]</code></pre>
+<p class="msg">this equation contradicts the others (its two sides differ by 13.3 %)</p>
+<p>The sheet gives V_2 twice: the work gives 0.07 m³, and the last line 0.08 m³. Remove one of them. An equation that gives nothing new, such as <code>V_2 = V_1 + W/p</code> in place of the last line, gets a warning instead. Its buttons remove a line or make it a check line.</p>
+
+<h3 id="temperature-in-sum">A [C] number in a sum or difference</h3>
+<pre class="refused"><code>T_1 = 27 [C]
+T_a = T_1 + 20 [C]</code></pre>
+<p class="msg">a [C] number in a sum or difference could be a temperature or a change in temperature: write a change as 20 [K], or the temperature in parentheses, (20 [C])</p>
+<p>For 20 K above T_1, write <code>20 [K]</code>; the button <strong>Write a change as 20 [K]</strong> does it. Where both readings fit, as in <code>25 [C] + dT</code>, the message has a button for each. Choose the one the sheet means.</p>
+
+<h3 id="hand-conversion">A temperature converted to kelvin by hand</h3>
+<pre class="refused"><code>T_1 = 27 [C]
+T_K = T_1 + 273.15 [K]</code></pre>
+<p class="msg">T_1 is already an absolute temperature: Dome holds every temperature in kelvin and converts [C] and [F] as it reads them, so adding 273.15 [K] counts the offset twice; use T_1 itself</p>
+<p>Use T_1 wherever the sheet uses T_K. The button <strong>Remove + 273.15 [K]</strong> leaves <code>T_K = T_1</code>.</p>
+
+<h3 id="temperature-or-change">A temperature where a change belongs, or the reverse</h3>
+<pre class="refused"><code>T_1 = 27 [C]
+T_2 = 80 [C]
+T_s = T_1 + T_2</code></pre>
+<p class="msg">T_2 is a temperature, and this adds it to another temperature; write a change in [K]</p>
+<p>For the mean temperature, write <code>(T_1 + T_2)/2</code>; for the change, <code>T_2 - T_1</code>. The reverse slip is a [C] number given for a change: Dome refuses <code>T_2 - T_1 = 30 [C]</code>, and its button writes <code>30 [K]</code>.</p>
+
+<h3>A result in a unit no quantity has</h3>
+<pre class="refused"><code>W_net = 100
+h_1 = 300 [kJ/kg]; h_2 = 250 [kJ/kg]
+W_net = mdot*(h_1 - h_2)</code></pre>
+<p class="msg">mdot is in s^2/m^2, a unit no usual quantity has; it depends on W_net, which is given without a unit, so check whether W_net needs one</p>
+<p>A number without a unit where no equation requires one is a plain number, so mdot came out in s²/m². Write the unit: with <code>W_net = 100 [kW]</code>, Dome gives mdot = 2 kg/s.</p>
+
+<h3>A check written with =</h3>
+<pre class="refused"><code>x = 3
+check x = 3</code></pre>
+<p class="msg">a check compares with ==, &lt;=, &gt;=, &lt; or &gt;</p>
+<p>Write <code>check x == 3</code>; the button <strong>Write ==</strong> does it. The reverse slip, <code>==</code> in an equation, has a button that writes <code>=</code>.</p>
+
+<h3>A key outside a table</h3>
+<pre class="refused"><code>table sat : T [C], v_g [m^3/kg], u_g [kJ/kg]
+  12, 0.0460, 233.63
+  16, 0.0405, 235.78
+u_2 = interp(sat, u_g, T = 20 [C])</code></pre>
+<p class="msg">T = 20 [C] is outside table sat, whose T runs from 12 to 16 [C]</p>
+<p>Add rows on both sides of the key, or check the value of the key.</p>
+
+<h3>A misspelled keyword</h3>
+<pre class="refused"><code>fluid water
+stat 1 : p = 1 [bar], x = 1</code></pre>
+<p class="msg">expected "=" but found "1"</p>
+<p>Dome read <code>stat</code> as the name of a variable, so it expected an equation. Correct the spelling to <code>state</code>. The <a href="reference.html#keywords">Reference</a> page lists the keywords.</p>
+
+<h2 id="math-view" class="lookup">The Math view</h2>
+<p>The Math view shows the sheet typeset as equations, with the value of each line. The first example's shot above shows it in place of the figure.</p>
+<ol>
+  <li>The Code and Math buttons in the sheet's header switch the sheet pane between the text and the Math view.</li>
+  <li>To show the Math view beside the sheet, choose Math in the menu of any other pane.</li>
+</ol>
+
+<h2 id="keys" class="lookup">Keys and completion</h2>
+<p>Keys are listed as on macOS. On Windows and Linux, <kbd>Ctrl</kbd> takes the place of <kbd>⌘</kbd>.</p>
 <table class="plain">
-  <thead><tr><th>Message</th><th>Rewrite</th></tr></thead>
+  <thead><tr><th>Keys</th><th>What they do</th></tr></thead>
   <tbody>
-    <tr><td>A <code>[C]</code> or <code>[F]</code> number in a sum or difference</td><td>The unit written <code>[K]</code> or <code>[R]</code>, a change; or the number in parentheses, a temperature</td></tr>
-    <tr><td>A temperature converted to kelvin by hand</td><td><code>+ 273.15 [K]</code> (or <code>+ 459.67 [R]</code>) removed</td></tr>
-    <tr><td>A <code>[C]</code> or <code>[F]</code> number given for a change, or added to a temperature in parentheses</td><td>The unit written <code>[K]</code> or <code>[R]</code></td></tr>
-    <tr><td>A number that needs a unit</td><td>Each unit the message names, written after the number; none for a number added to a temperature, a 0 given for one, or a unit no usual quantity has</td></tr>
-    <tr><td>Two values satisfy an equation, or two solutions satisfy equations solved together</td><td>The check line the warning names, added below the line</td></tr>
-    <tr><td>An equation that repeats the others</td><td>The line removed, when nothing else stands on it; or the equation made a check line</td></tr>
-    <tr><td><code>==</code> in an equation; <code>=</code> in a check line</td><td><code>=</code>; <code>==</code></td></tr>
+    <tr><td><kbd>⌘</kbd><kbd>Enter</kbd></td><td>Solve the sheet. In the sweep editor, run the sweep.</td></tr>
+    <tr><td><kbd>⌘</kbd><kbd>.</kbd></td><td>Make the rewrite that the problem at the cursor offers. Where it offers two, open them as a choice: the arrow keys move, <kbd>Enter</kbd> makes one and <kbd>Esc</kbd> closes the choice.</td></tr>
+    <tr><td><kbd>⌘</kbd><kbd>Z</kbd></td><td>Undo the last edit, a rewrite included.</td></tr>
+    <tr><td><kbd>Ctrl</kbd><kbd>Space</kbd></td><td>Complete a name, unit or fluid. On macOS, where <kbd>Ctrl</kbd><kbd>Space</kbd> often switches the input source, <kbd>Option</kbd><kbd>`</kbd> does the same.</td></tr>
   </tbody>
 </table>
-<p>A message whose rewrite would need something the sheet does not say, such as the temperature a change is counted from or the starting value of a guess line, has no rewrite button.</p>
-<p>A number without a unit given on a line of its own, which an equation needs in a unit, is reported on its own line: with <code>T_H = 500 [C]</code>, <code>T_L = 25</code> and <code>eta = 1 - T_L/T_H</code>, the message is on <code>25</code>, since by the equation <code>T_L</code> is a temperature, and its buttons write <code>25 [C]</code> and <code>25 [K]</code>.</p>
 
-<h2>The Math view</h2>
-<p>The Math view shows the sheet typeset as equations, with the value of each line. It is available in two places: the Code and Math buttons in the sheet's header switch the sheet pane, and the pane menu of any other pane can show Math beside the sheet, as above.</p>
-
-<h2>Keys and completion</h2>
-<p>With the cursor in the sheet, <kbd>⌘</kbd><kbd>Enter</kbd> (<kbd>Ctrl</kbd><kbd>Enter</kbd> on Windows and Linux) solves it; in the sweep editor the same keys run the sweep. <kbd>⌘</kbd><kbd>.</kbd> (<kbd>Ctrl</kbd><kbd>.</kbd>) makes the rewrite a problem at the cursor offers, or opens the choice where it offers more (see <a href="#problems">Problems</a>). With Auto-solve checked in the header, the sheet is solved after each edit. <kbd>Ctrl</kbd><kbd>Space</kbd> completes a name, unit or fluid; on macOS, where <kbd>Ctrl</kbd><kbd>Space</kbd> often switches the input source, <kbd>Option</kbd><kbd>`</kbd> does the same.</p>
-
-<h2 id="reference">Language reference</h2>
-<p>Help › Reference opens this reference in a pane beside the current panes. The text below is taken from that pane when this manual is built, so the two always match. Keys are listed as on macOS; on Windows and Linux, <kbd>Ctrl</kbd> takes the place of <kbd>⌘</kbd>.</p>
-<figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
-  <div class="frame">
-    <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="1032" y1="285.05" x2="1004.27" y2="285.05"/></svg>
-    <div class="img"><a href="img/reference-pane.png"><img src="img/reference-pane.png" width="1280" height="800" alt="The Reference pane open at the right of the window, beside the sheet, the figure and the results."></a><span class="mks" aria-hidden="true"><span class="mk right" style="left:99.38%;top:52.88%">1</span></span></div>
-    <span class="bubs" aria-hidden="true"><span class="bub right" style="top:52.64%"><b>1</b>Reference</span></span>
-  </div>
-  <figcaption><ol class="legend">
-    <li><b>Reference.</b> The language reference, the same text as at the end of this page. Close pane, at the right of its header, closes it.</li>
-  </ol></figcaption>
-</figure>
-<div class="ref">
-<h3>Statements</h3><table><tbody><tr><td>a = b + c</td><td>Equation. Unknowns may appear on either side; the sheet is solved as a system.</td></tr><tr><td>x = 3; y = 4</td><td>One statement per line, or separated by semicolons.</td></tr><tr><td>% text</td><td>Comment. <code>%%</code> at the start of a line begins a section in published reports.</td></tr><tr><td>fluid water</td><td>Fluid for the states that follow: water, r134a, r134a_book (R-134a fitted to the textbook's tables, inside their range: -47.48 to 204.44 °C, up to 39.74 bar), r22, ammonia, propane, air, and the ideal gases nitrogen (n2), oxygen (o2), carbondioxide (co2), carbonmonoxide (co) and water_ig (h2o_ig, water vapor as an ideal gas, h from 0 K, not the steam tables).</td></tr><tr><td>state 1 : p = …, T = …</td><td>State from two independent properties among p, T, v, u, h, s, x. Defines p_1, T_1, v_1, u_1, h_1, s_1, x_1.</td></tr><tr><td>state 2 (r134a) : …</td><td>State of a fluid other than the current one.</td></tr><tr><td>check a == b</td><td>Comparison evaluated after solving; also &lt;=, &gt;=, &lt;, &gt;. Its two sides are checked for units as an equation's are. A check on a variable chooses between two values that satisfy its equation, or two solutions of equations solved together, also through a name found from them by one equation (r_p in p_2 = 100 [kPa]*r_p).</td></tr><tr><td>guess T_2 = 400 [K]</td><td>Starting value for a variable found by iteration, in place of the one Dome takes from its units (never from its name). Needed only when Dome reports that a solve could not start or found no solution from its starting values. A guess on a name found by one equation from another unknown (r_p in p_2 = 100 [kPa]*r_p) starts that unknown. It does not choose between two values; a check line does.</td></tr><tr><td>plot Ts : 1 -s- 2 -p- 3</td><td>Property diagram: Ts, Tv, pv, ph or hs. Tv and pv have v on a logarithmic axis.</td></tr><tr><td>function f(x) = 2*x + 1</td><td>Function on one line, called as <code>f(a_2)</code> in any equation, state line or check. The body may use the parameters, other functions and the sheet's variables. A function cannot call itself.</td></tr><tr><td class="brk"><span class="nb">table cp_data :</span> <span class="nb">T [K], cp [kJ/kg/K]</span></td><td>Table of data: a header line with each column's name and unit, then indented rows of numbers separated by commas. A blank or unindented line ends it. A column in C or F is a temperature; one in K or R is an amount in kelvin, whatever its name.</td></tr></tbody></table><h3>Units</h3><table><tbody><tr><td>80 [bar]</td><td>A unit follows a number in brackets. Values are converted to SI internally.</td></tr><tr><td>480 [C]</td><td>A temperature unit alone (C, K, F, R) is a temperature. A change in temperature is written in K or R: <code>T_1 + 10 [K]</code>. In a sum or difference, a C or F number is written in parentheses: <code>(25 [C]) + dT</code>. Dome works in kelvin, so 273.15 is never added by hand. A name makes no difference: <code>dT = 10 [C]</code> is the temperature 10 °C. A value given in K or R is an amount in kelvin, shown in the unit typed, a temperature or a change as the equations use it.</td></tr><tr><td>T_2 - T_1</td><td>A difference of two temperatures is a change, shown in K (°R in English units). A temperature plus or minus a change is a temperature. An average such as <code>(T_1 + T_2)/2</code> is a temperature; <code>T_1 + T_2</code> used as it stands is refused. A value the equations do not make a temperature for certain, such as T_1 in <code>p*v_1 = R*T_1</code>, is shown in K. A change given as the T of a state or property function is an error.</td></tr><tr><td>T_1 - 20 [C]</td><td>Refused: a bare C or F number in a sum or difference could be a temperature or a change. Write <code>T_1 - 20 [K]</code> for 20 K below T_1, and <code>T_1 - (20 [C])</code> for the change from 20 °C. Set equal to a change it is refused too, as in <code>T_2 - T_1 = 30 [C]</code>: a change of 30 °C is <code>30 [K]</code>.</td></tr><tr><td>[kJ/kg·K]</td><td>Everything after a slash is in the denominator. Also <code>*</code>, <code>^</code> and parentheses.</td></tr><tr><td>[kg/kmol]</td><td>Amount of substance is a dimension of its own: mol, kmol, lbmol. Molar quantities are shown in kmol (lbmol in English units): <code>h_bar = 8669 [kJ/kmol]</code>, <code>R_u = 8.314 [kJ/kmol/K]</code>.</td></tr><tr><td>[V] [A] [Ω]</td><td>Electric current is a dimension of its own: V, kV, A, mA, Ω (or ohm). A volt is a watt per ampere, so <code>E*i</code> is a power.</td></tr><tr><td>[rpm]</td><td>Revolutions per minute, a frequency: <code>omega = 2*pi*N</code> is in rad/s, shown as 1/s. <code>[ton]</code> is the ton of refrigeration (200 Btu/min), <code>[mile]</code> 5280 ft.</td></tr><tr><td>pi</td><td>The constant π, unless the sheet has a line <code>pi = …</code>.</td></tr><tr><td>units</td><td>kg g lb m cm mm ft in mile s min h rpm K C F R N kN lbf Pa kPa MPa bar atm psi J kJ MJ Btu kWh W kW MW hp ton L gal mol kmol lbmol A mA V kV Ω ohm</td></tr></tbody></table><h3>Functions</h3><table><tbody><tr><td>h(water, p = p_2, s = s_1)</td><td>Property of a fluid at a state given by two named properties. Also p, T, v, u, s, x, cp, cv, rho. Each input has the units of its property and is checked as on a state line: <code>T = 300</code> needs a unit.</td></tr><tr><td>Tsat(water, p = 1 [bar])</td><td>Saturation temperature; <code>psat(water, T = …)</code> is the saturation pressure.</td></tr><tr><td>M(nitrogen)</td><td>Molar mass of a fluid, in kg/kmol.</td></tr><tr><td class="brk"><span class="nb">omega(moistair,</span> <span class="nb">p = 1 [atm],</span> <span class="nb">T = 25 [C],</span> <span class="nb">phi = 0.5)</span></td><td>Moist air, from p and a pair from T, phi, omega, Twb, Tdp, pv, h; for a pair that does not work, Dome names the pairs that do. Functions: omega (humidity ratio), phi (relative humidity, a fraction), T, Twb (wet bulb), Tdp (dew point), pv (vapor partial pressure), and h, v, s, cp per kg of dry air. Moist air has no state lines. Moist air's h counts its dry air from the psychrometric datum: 0 °C on an SI sheet, 0 °F on an English sheet. Each fluid's h, u and s count from its own reference, carried through the equations like units: water on the steam tables; air (<code>h(air, …)</code>, a state of air), the other ideal gases and a heat capacity times an absolute temperature (<code>cp_a*T_1</code>) from 0 K; moist air from its dry air at 0 °C and water on the steam tables; a difference of temperatures from none; an unknown h, or one typed from a table, takes only the reference its equation still requires, so in <code>m_a*h_a1 + m_w*h_w1 = m_a*h_a2 + m_w*h_w2</code> h_w2 is on the steam tables. An equation that takes water from both the steam tables and <code>water_ig</code>, or dry air from both <code>h(air, …)</code> and moist air, is an error. An equation or a difference whose sides are on different references is an error, so every stream is written one way: every stream with <code>h(moistair, …)</code>, or every stream with <code>cp_a*(T - T_0) + omega*h(water, T = …, x = 1)</code>; and beside the steam tables a vapor's h is <code>h(water, T = …, x = 1)</code> (h_v = h_g(T)), not <code>h(water_ig, …)</code>.</td></tr><tr><td class="brk"><span class="nb">interp(cp_data, cp,</span> <span class="nb">T = T_1)</span></td><td>Column cp of a table at T = T_1, by linear interpolation between rows. The key column must increase or decrease throughout, and a key outside the table is an error. A column in C or F holds temperatures, so a key that is a change for certain is an error; a column in K or R is read by value. An unknown may sit in the key.</td></tr><tr><td class="brk"><span class="nb">integral(C/V^n,</span> <span class="nb">V, V_1, V_2)</span></td><td>The integral of an expression over a variable of its own, here V from V_1 to V_2. The variable belongs to the call: in the expression its name means the call's variable, never a variable of the sheet, and in the limits the sheet's. It takes the units of its limits, which must be the same, and the integral is in the units of the expression times them. The expression may hold property functions with the variable as an input, functions of the sheet and interp() with it as the key; a limit may be an unknown. Found by adaptive Gauss–Kronrod quadrature to 1 part in 10^10; a value of the variable where the expression is refused or infinite is an error.</td></tr><tr><td class="brk"><span class="nb">der(h(water, p = p_1,</span> <span class="nb">T = T), T, T_1)</span></td><td>The derivative of an expression with respect to a variable of its own at a point, here T at T_1, in the units of the expression over those of the variable. The variable belongs to the call, as in integral(). Found by central differences extrapolated to a step of zero (Ridders' method) to 1 part in 10^6 or better; a kink at the point, as at a phase boundary, is an error.</td></tr><tr><td>ln exp sqrt abs</td><td>Also log10, sin, cos, tan, asin, acos, atan, min, max.</td></tr></tbody></table><h3>Plot paths</h3><table><tbody><tr><td>-p- -s- -T- -v- -h-</td><td>Process at constant pressure, entropy, temperature, specific volume or enthalpy. Drawn dashed when that property differs between the two states.</td></tr><tr><td>--</td><td>Straight line.</td></tr></tbody></table><h3>Sweep</h3><pre>sweep T_3 = 320:20:600 [C]     % start:step:stop, or a list: 5, 7, 9
-record eta, x_4
-plot eta, x_4 vs T_3</pre><p>The swept variable must be an input: a line <code>name = number [unit]</code>, or a number written in a state line (<code>x = 0</code> in state 3 makes <code>x_3</code> an input).</p><pre>sweep r = 2:1:12               % two sweep lines: every combination
-sweep k = 1.3, 1.35, 1.4
-plot eta vs r                  % one curve for each k</pre><p>With two sweep lines each plot is drawn against one of the swept variables, with one curve for each value of the other; there are at most 2000 runs.</p><h3>Properties</h3><p>CoolProp 7.2.1dev (Helmholtz equations of state; air and five other gases as ideal gases with variable specific heats; moist air from its humid-air model, with h of dry air zero at the psychrometric datum, 0 °C on SI sheets and 0 °F on English sheets). Enthalpy, internal energy and entropy are shifted to named reference states: the steam tables' for water, each refrigerant's own tables', 0 K for the ideal gases. Differences between states, and the cycle results built from them, agree closely with the printed tables; a single value can differ from a printed table by about 1 kJ/kg, and by up to about 5 kJ/kg in parts of the superheated tables. These differences come from CoolProp's property models.</p><h3>Keys</h3><table><tbody><tr><td>⌘Enter</td><td>Solve, with the cursor in the sheet; in the sweep editor, run the sweep</td></tr><tr><td>⌘.</td><td>Make the rewrite that the problem at the cursor, or on its line, offers; where it offers more, open them as a choice</td></tr><tr><td>⌘S, ⌘⇧S</td><td>Save, save as</td></tr><tr><td>⌘O, ⌘N</td><td>Open, new</td></tr><tr><td>⌘Z, ⌘⇧Z</td><td>Undo, redo</td></tr><tr><td>Ctrl+Space, ⌥`</td><td>Complete a name, unit or fluid, in the sheet or the sweep editor</td></tr></tbody></table>
-</div>
+<h2 id="reference" class="lookup">The language reference</h2>
+<p>Help › Reference opens a pane beside the sheet that lists the statements, units, functions and keys. The <a href="reference.html">Reference</a> page of this manual lists the keywords, operators, units, fluids and functions in tables, with the rules in full.</p>
 </main>
 <nav class="pager" aria-label="Pages"><a class="prev" href="install.html"><span>Previous</span>Installing and first launch</a><a class="next" href="states.html"><span>Next</span>States and diagrams</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Publishing and exporting · Dome manual</title>
-<meta name="description" content="Reports in PDF, HTML, LaTeX and MATLAB from the Publish view; figures as PNG, SVG, PDF or MATLAB; the states table as CSV; and the MATLAB script export.">
+<meta name="description" content="A sheet as a report in PDF, HTML or LaTeX; comments and headings in a report; the sheet as a MATLAB script; and the files Dome writes.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='64' y='64' width='896' height='896' rx='200' fill='%23fff' stroke='%23D0D5DD' stroke-width='8'/%3E%3Cpath d='M190 800 C 280 380, 430 250, 512 250 C 594 250, 744 380, 834 800' fill='%23E6F4F1' stroke='%23101828' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M300 560 L 724 560' stroke='%230F766E' stroke-width='40' stroke-linecap='round'/%3E%3Ccircle cx='512' cy='250' r='62' fill='%230F766E'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="manual.css">
 </head>
@@ -17,10 +17,38 @@
 </header>
 <main class="page">
 <h1>Publishing and exporting</h1>
-<p class="lede">The Publish view writes the sheet as a report. Figures, sweep charts and the states table can also be exported on their own, and the whole sheet can be written as a MATLAB script that uses the Dome toolbox.</p>
+<p class="lede">The Publish view writes a sheet as a report or as a MATLAB script. Figures, sweep charts and the states table can also be exported on their own.</p>
 
-<h2>The Publish view</h2>
-<p>The Publish tab in the header, or File › Export › Report, opens the Publish view: the options at the left and a preview of the report at the right. The preview changes with each option. The report always uses the sheet as written, never a value from a drag or the sweep slider.</p>
+<h2 id="report">Publishing a report</h2>
+<p>This sheet finds the power of a steam turbine and draws its T–s diagram.</p>
+<pre><code>%% Steam turbine
+% Steam expands isentropically from 80 bar and 480 C to 7 bar.
+fluid water
+state 1 : p = 80 [bar], T = 480 [C]
+state 2 : p = 7 [bar], s = s_1
+mdot = 10 [kg/s]          % steam flow rate
+W_t = mdot*(h_1 - h_2)    % turbine power
+plot Ts : 1 -s- 2</code></pre>
+<p>Dome gives W_t = 6069.6 kW. The report of this sheet is titled Steam turbine. It opens with a table of the inputs and the states table. Then come the comment, the state lines and the equation, each typeset with its value, and the T–s diagram.</p>
+<ol>
+  <li>The Publish tab in the header, or File › Export › Report, opens the Publish view. The options are at the left. At the right, a preview shows the report as the options set it.</li>
+  <li>Format chooses the file, as in the table below.</li>
+  <li>Include has a box for each part: the equations, their values, the inputs and states tables, comments, the sheet source and each figure.</li>
+  <li>A sweep can be included once it has run in the Sweep view.</li>
+  <li>Paper sets Letter or A4, Significant figures the digits of each value, and Units SI or English.</li>
+  <li>The title is the first <code>%%</code> section of the sheet unless another is typed. The Author field is optional; when it is filled in, the report carries the name.</li>
+  <li>Publish writes the file. The report uses the sheet as written, never a value from a drag or the sweep slider.</li>
+</ol>
+<table class="plain">
+  <thead><tr><th>Format</th><th>File</th></tr></thead>
+  <tbody>
+    <tr><td>PDF</td><td>A PDF report, on Letter or A4 paper.</td></tr>
+    <tr><td>HTML</td><td>One HTML file, with the equations and figures inside it.</td></tr>
+    <tr><td>LaTeX</td><td>A zip file holding the <code>.tex</code> file and each figure as a PDF.</td></tr>
+    <tr><td>MATLAB script</td><td>A <code>.m</code> file: the equations as MATLAB statements, then the figures chosen under Include.</td></tr>
+  </tbody>
+</table>
+<p>The shot shows the Publish view with the Rankine cycle example.</p>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="168" y1="86.99" x2="206.3" y2="86.99"/><line x1="168" y1="124.49" x2="206.3" y2="110.62"/><line x1="168" y1="210.74" x2="206.3" y2="210.74"/><line x1="168" y1="295.31" x2="206.3" y2="295.31"/><line x1="168" y1="374.29" x2="206.3" y2="374.29"/><line x1="168" y1="450.47" x2="206.3" y2="450.47"/><line x1="1032" y1="285.05" x2="1004.27" y2="285.05"/></svg>
@@ -37,20 +65,37 @@
     <li><b>Preview.</b> The report as it will be written.</li>
   </ol></figcaption>
 </figure>
-<table class="plain">
-  <thead><tr><th>Format</th><th>File</th></tr></thead>
-  <tbody>
-    <tr><td>PDF</td><td>A PDF report, on Letter or A4 paper.</td></tr>
-    <tr><td>HTML</td><td>One HTML file, with the equations and figures inside it.</td></tr>
-    <tr><td>LaTeX</td><td>A zip file holding the <code>.tex</code> file and each figure as a PDF.</td></tr>
-    <tr><td>MATLAB script</td><td>A <code>.m</code> file: the equations as MATLAB statements, then the figures chosen under Include.</td></tr>
-  </tbody>
-</table>
-<p>Include chooses the parts of the report: the equations typeset, their values beside them, a table of inputs, the states table, comments as text, each figure, a sweep that has run, and the sheet source. The report's title is the first <code>%%</code> section of the sheet unless another is typed. The Author field is optional; when it is filled in, the report carries the name.</p>
-<p>A comment at the end of a line belongs to that line. It is printed beside the line's equation, or, for an input shown in the table of inputs, in the table's Description column. A comment on a line of its own is a paragraph where it stands, and comment lines in a row make one paragraph. A <code>%%</code> heading with nothing printed under it, such as one over inputs that the table of inputs shows, is left out. The names in Dome's own text, such as the heading of a sweep, a caption or an axis title, are set as in the equations: <code>T_3</code> is T with subscript 3, <code>eta</code> is η. Comments are printed as typed. A character that the PDF's fonts or LaTeX lack is set as in the equations, so Ẇ is a W with a dot over it, and a character with no TeX equivalent, such as ⌘, is printed in DejaVu Serif. The table of inputs gives each input in the unit it was typed in, so <code>m_a = 100 [lb/min]</code> is 100 lb/min. A heading stays on the page with what follows it. With the sheet source included, a report with a sweep also gives the sweep's lines, so that the sweep can be run again from the report.</p>
 
-<h2>The MATLAB script</h2>
-<p>With MATLAB script chosen, the options for the written report are turned off, the figures can still be chosen, and one option is added: States from the Dome MATLAB toolbox. Checked (the default), the script computes each state with the toolbox, so it computes again when an input in the script changes. Unchecked, the states are written into the script as numbers, and the script runs without the toolbox. The same script, with the option as set here, is File › Export › MATLAB script. The script carries the sheet's comments: a comment at the end of a line ends the script's line for that statement, and comment lines stand above the statement they stood above in the sheet.</p>
+<h3 id="comments">Comments and headings</h3>
+<ol>
+  <li>A comment at the end of a line belongs to that line. In the sheet above, "turbine power" is printed beside the equation for W_t.</li>
+  <li>The comment of an input that the inputs table shows is its Description there, as "steam flow rate" is for mdot.</li>
+  <li>A comment on a line of its own is a paragraph where it stands. Comment lines in a row make one paragraph.</li>
+  <li>A line that starts with <code>%%</code> is a section heading. A heading with nothing printed under it is left out, such as one over inputs that the inputs table shows.</li>
+  <li>Dome's own text, such as a heading or a caption, sets names as the equations do. <code>T_3</code> is T with subscript 3, and <code>eta</code> is η.</li>
+  <li>Comments are printed as typed. The <a href="reference.html#report-rules">Reference</a> page gives the rules for characters, units and page breaks.</li>
+</ol>
+
+<h2 id="matlab">The MATLAB script</h2>
+<p>With MATLAB script chosen as the format, the sheet above becomes a script. Its states and equation read:</p>
+<pre class="matlab"><code>% state 1 : p = 80 [bar], T = 480 [C]  (superheated)
+state_1 = dome.state('water', 'p', p_1, 'T', T_1, 'units', 'base');
+v_1 = state_1.v; u_1 = state_1.u; h_1 = state_1.h; s_1 = state_1.s; x_1 = state_1.x;
+s_2 = s_1;
+% state 2 : p = 7 [bar], s = s_1  (two-phase)
+state_2 = dome.state('water', 'p', p_2, 's', s_2, 'units', 'base');
+T_2 = state_2.T; v_2 = state_2.v; u_2 = state_2.u; h_2 = state_2.h; x_2 = state_2.x;
+W_t = mdot * (h_1 - h_2);  % turbine power</code></pre>
+<p>Run in MATLAB with the Dome toolbox, the script gives W_t = 6069571.91, in W.</p>
+<ol>
+  <li>The script holds every value in SI base units: Pa, K, m³/kg, J/kg and J/(kg·K). The inputs come first, each with the value as typed in a comment: <code>p_1 = 8000000;    % 80 [bar]</code>.</li>
+  <li>With States from the Dome MATLAB toolbox checked, the default, each state is a call to <code>dome.state</code>. Change an input and run the script again to compute the states again.</li>
+  <li>Unchecked, the states are written as the numbers Dome computed, and the script runs without the toolbox.</li>
+  <li>A value Dome found by iteration is written as a number, with the equation it satisfies.</li>
+  <li>The script carries the sheet's comments. The figures chosen under Include are drawn in MATLAB.</li>
+  <li>File › Export › MATLAB script writes the same script with every figure, with the toolbox option as set in the Publish view.</li>
+</ol>
+<p><a href="toolbox.html">The MATLAB toolbox</a> page covers installing the toolbox.</p>
 <figure class="shot wm" style="--fw:704;--fwpx:704px;--nwpx:340px;--ar:704/782;--il:28.69%;--it:2.81%;--iw:42.61%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 704 782" aria-hidden="true"><line x1="536" y1="72.5" x2="497" y2="72.5"/><line x1="536" y1="317.5" x2="497" y2="317.5"/></svg>
@@ -63,7 +108,23 @@
   </ol></figcaption>
 </figure>
 
-<h2>The File menu</h2>
+<h2 id="files" class="lookup">Files Dome writes</h2>
+<p>The File menu holds the sheet's files and exports. The export button at the right of a figure's header writes the figure as it is shown, with its zoom and display options.</p>
+<table class="plain">
+  <thead><tr><th>Menu item</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td>File › Save, Save as</td><td>Saves the sheet as a <code>.dome</code> file.</td></tr>
+    <tr><td>File › Save as template</td><td>Saves a copy of the sheet that opens as a new, unsaved sheet, as a starting point for others.</td></tr>
+    <tr><td>File › Export › MATLAB script</td><td>Writes the sheet as a <code>.m</code> file, as above.</td></tr>
+    <tr><td>File › Export › States table</td><td>Writes the states table as a <code>.csv</code> file, for a spreadsheet.</td></tr>
+    <tr><td>File › Export › Report</td><td>Opens the Publish view.</td></tr>
+    <tr><td>Figure › PNG, SVG, PDF</td><td>Writes the figure as a PNG at 300 dpi, or as an SVG or PDF vector drawing for reports.</td></tr>
+    <tr><td>Figure › Copy image</td><td>Puts the figure on the clipboard.</td></tr>
+    <tr><td>Figure › Copy data</td><td>Copies the states of the figure as tab-separated text.</td></tr>
+    <tr><td>Figure › MATLAB script</td><td>Writes a script that draws the same diagram in MATLAB.</td></tr>
+  </tbody>
+</table>
+<p>File › Open reads a <code>.dome</code> file, or a <code>.txt</code> or <code>.m</code> file of sheet lines into a new sheet. A sweep chart's export menu adds CSV to the figure's items; see <a href="sweeps.html">Sweeps</a>.</p>
 <figure class="shot wm" style="--fw:652;--fwpx:652px;--nwpx:288px;--ar:652/455;--il:30.98%;--it:4.84%;--iw:38.04%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 652 455" aria-hidden="true"><line x1="168" y1="209" x2="209.59" y2="209"/><line x1="168" y1="272" x2="209.59" y2="272"/><line x1="168" y1="309.5" x2="209.59" y2="303"/><line x1="168" y1="347" x2="209.59" y2="334"/><line x1="168" y1="384.5" x2="209.59" y2="374"/></svg>
@@ -78,16 +139,6 @@
     <li><b>Updates.</b> Asks whether a newer version of Dome has been published.</li>
   </ol></figcaption>
 </figure>
-<ul>
-  <li><strong>New, Open, Save, Save as:</strong> sheets are <code>.dome</code> files. Open also reads a <code>.txt</code> or <code>.m</code> file of sheet lines into a new sheet.</li>
-  <li><strong>Save as template:</strong> a copy of the sheet that opens as a new, unsaved sheet, as a starting point for others.</li>
-  <li><strong>MATLAB script:</strong> the sheet as a <code>.m</code> file, as in the Publish view.</li>
-  <li><strong>States table:</strong> the states table as a <code>.csv</code> file, for a spreadsheet.</li>
-  <li><strong>Report:</strong> the Publish view.</li>
-</ul>
-
-<h2>Figures</h2>
-<p>The export button in a figure's header writes the figure as it is shown, with its zoom and display options:</p>
 <figure class="shot wm" style="--fw:652;--fwpx:652px;--nwpx:288px;--ar:652/313;--il:30.98%;--it:7.03%;--iw:38.04%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 652 313" aria-hidden="true"><line x1="168" y1="91" x2="209.98" y2="91"/><line x1="168" y1="184" x2="209.98" y2="184"/><line x1="168" y1="224" x2="209.98" y2="224"/><line x1="168" y1="261.5" x2="209.98" y2="255"/></svg>
@@ -101,15 +152,8 @@
     <li><b>MATLAB figure.</b> A script that draws the same diagram in MATLAB.</li>
   </ol></figcaption>
 </figure>
-<ul>
-  <li><strong>PNG</strong> at 300 dpi, <strong>SVG</strong> and <strong>PDF</strong> as vector drawings for reports.</li>
-  <li><strong>Copy image</strong> puts the figure on the clipboard.</li>
-  <li><strong>Copy data</strong> copies the states of the figure as tab-separated text.</li>
-  <li><strong>MATLAB script</strong> writes a script that draws the same diagram in MATLAB.</li>
-</ul>
-<p>Sweep charts have the same menu, with CSV added (see <a href="sweeps.html">Sweeps</a>).</p>
 </main>
-<nav class="pager" aria-label="Pages"><a class="prev" href="sweeps.html"><span>Previous</span>Sweeps</a><a class="next" href="toolbox.html"><span>Next</span>The MATLAB toolbox</a></nav>
+<nav class="pager" aria-label="Pages"><a class="prev" href="examples.html"><span>Previous</span>Examples</a><a class="next" href="toolbox.html"><span>Next</span>The MATLAB toolbox</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
 </body>
 </html>

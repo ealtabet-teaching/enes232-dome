@@ -19,7 +19,7 @@
 <h1>Installing and first launch</h1>
 <p class="lede">The <a href="../index.html">download page</a> offers the installer for the computer it is opened on. Each system blocks an app from an unknown developer once, at the first launch.</p>
 
-<h2>macOS</h2>
+<h2 id="macos">macOS</h2>
 <p>macOS 11 or later, on Apple silicon or Intel.</p>
 <ol class="steps">
   <li>Download <code>Dome-macOS.dmg</code>.</li>
@@ -29,7 +29,7 @@
   <li>Open Dome again and confirm Open Anyway. Later launches open directly.</li>
 </ol>
 
-<h2>Windows</h2>
+<h2 id="windows">Windows</h2>
 <p>Windows 10 or 11.</p>
 <ol class="steps">
   <li>Download and run <code>Dome-Windows-setup.exe</code>.</li>
@@ -37,7 +37,7 @@
   <li>Open Dome from the Start menu.</li>
 </ol>
 
-<h2>Linux</h2>
+<h2 id="linux">Linux</h2>
 <p>Linux on x86-64.</p>
 <ol class="steps">
   <li>Download <code>Dome-Linux.AppImage</code>.</li>
@@ -46,9 +46,8 @@
 </ol>
 <p>If Linux reports that no fusermount binary is found, install the fuse3 package.</p>
 
-<h2>The window</h2>
-<p>Dome opens on a new sheet. On the first launch a notice reads “Help › Examples and Help › Take the tour show how Dome works.” It is not shown again. Sheets that were open when Dome closed, saved or not, return at the next launch on the same computer.</p>
-<p>The window below shows the Rankine cycle example in the default layout: files and the Workspace at the left, the sheet in the middle, its figure at the right, and the results at the bottom.</p>
+<h2 id="window" class="lookup">The window</h2>
+<p>Dome opens on a new sheet. At the first launch, a notice reads “Help › Examples and Help › Take the tour show how Dome works.” Sheets that were open when Dome closed return at the next launch on the same computer, saved or not.</p>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/541.5;--il:16.83%;--it:4.06%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 541.5" aria-hidden="true"><line x1="168" y1="18.75" x2="446.24" y2="15.42"/><line x1="168" y1="65" x2="562.58" y2="15.42"/><line x1="1032" y1="148.75" x2="771.55" y2="15.42"/><line x1="1032" y1="102.5" x2="866.86" y2="15.42"/><line x1="1032" y1="18.75" x2="939.54" y2="15.42"/><line x1="1032" y1="56.25" x2="1001.78" y2="35.99"/><line x1="168" y1="148.75" x2="195.73" y2="132.76"/><line x1="168" y1="364.72" x2="195.73" y2="364.72"/><line x1="168" y1="111.25" x2="627.79" y2="44.34"/><line x1="1032" y1="205.39" x2="1004.26" y2="205.39"/><line x1="1032" y1="437.35" x2="1004.26" y2="437.35"/></svg>
@@ -61,7 +60,7 @@
     <li><b>Layouts.</b> The sheet alone; the sheet and a figure; or files, sheet, figure and results.</li>
     <li><b>Sheet, Sweep, Publish.</b> The three views: the sheet, a sweep of one or two inputs, and the report.</li>
     <li><b>File menu.</b> New, Open, Save, Save as, Save as template, and the exports.</li>
-    <li><b>Help menu.</b> The examples, the tour, the language reference and this manual.</li>
+    <li><b>Help menu.</b> The examples, the tour, the language reference, this manual and the licences.</li>
     <li><b>Files.</b> New, Open, Save and Save as, and the list of open sheets.</li>
     <li><b>Workspace.</b> Every variable of the sheet with its value and unit, then the state properties.</li>
     <li><b>Sheet.</b> One statement per line. The value of each line appears at its right.</li>
@@ -69,32 +68,40 @@
     <li><b>Results.</b> Tabs for the states table, the problems, the checks and the log.</li>
   </ol></figcaption>
 </figure>
-<p>Every pane has the same controls at the right of its header: split right, split down, a menu that chooses what the pane shows (for example Math, a figure, the results, Workspace, Files or Reference), and Close pane. The bar between two panes resizes them. On macOS, keyboard shortcuts use <kbd>⌘</kbd>; on Windows and Linux they use <kbd>Ctrl</kbd>.</p>
+<ol>
+  <li>The shot shows the Rankine cycle example in the default layout. Files and the Workspace are at the left, the sheet in the middle, its figure at the right, and the results at the bottom.</li>
+  <li>Each pane has four controls at the right of its header: split right, split down, a menu of what the pane shows, and Close pane.</li>
+  <li>The menu shows the sheet, Math, a figure, the results, the Workspace, Files, a sweep or Reference in the pane.</li>
+  <li>The bar between two panes resizes them.</li>
+  <li>On macOS, keyboard shortcuts use <kbd>⌘</kbd>; on Windows and Linux they use <kbd>Ctrl</kbd>.</li>
+</ol>
 
-<h2>The Help menu</h2>
+<h2 id="help-menu" class="lookup">The Help menu</h2>
 <figure class="shot wm" style="--fw:650;--fwpx:650px;--nwpx:286px;--ar:650/677;--il:31.08%;--it:3.25%;--iw:37.85%">
   <div class="frame">
-    <svg class="leaders" viewBox="0 0 650 677" aria-hidden="true"><line x1="482" y1="72.26" x2="442" y2="72.26"/><line x1="482" y1="526" x2="442" y2="526"/><line x1="482" y1="563.5" x2="442" y2="557"/><line x1="482" y1="601" x2="442" y2="599.78"/></svg>
-    <div class="img"><a href="img/help-menu.png"><img src="img/help-menu.png" width="246" height="633" alt="The Help menu open: the eleven examples, then Take the tour, Reference and Manual."></a><span class="mks" aria-hidden="true"><span class="mk right" style="left:92.68%;top:7.94%">1</span><span class="mk right" style="left:92.68%;top:79.62%">2</span><span class="mk right" style="left:92.68%;top:84.52%">3</span><span class="mk right" style="left:92.68%;top:91.28%">4</span></span></div>
-    <span class="bubs" aria-hidden="true"><span class="bub right" style="top:10.67%"><b>1</b>Examples</span><span class="bub right" style="top:77.7%"><b>2</b>Tour</span><span class="bub right" style="top:83.23%"><b>3</b>Reference</span><span class="bub right" style="top:88.77%"><b>4</b>Manual</span></span>
+    <svg class="leaders" viewBox="0 0 650 677" aria-hidden="true"><line x1="482" y1="72.26" x2="442" y2="72.26"/><line x1="482" y1="526" x2="442" y2="526"/><line x1="482" y1="563.5" x2="442" y2="557"/><line x1="482" y1="601" x2="442" y2="599.78"/><line x1="482" y1="638.5" x2="442" y2="625.2"/></svg>
+    <div class="img"><a href="img/help-menu.png"><img src="img/help-menu.png" width="246" height="633" alt="The Help menu open: the eleven examples, then Take the tour, Reference, Manual and Licences."></a><span class="mks" aria-hidden="true"><span class="mk right" style="left:92.68%;top:7.94%">1</span><span class="mk right" style="left:92.68%;top:79.62%">2</span><span class="mk right" style="left:92.68%;top:84.52%">3</span><span class="mk right" style="left:92.68%;top:91.28%">4</span><span class="mk right" style="left:92.68%;top:95.29%">5</span></span></div>
+    <span class="bubs" aria-hidden="true"><span class="bub right" style="top:10.67%"><b>1</b>Examples</span><span class="bub right" style="top:77.7%"><b>2</b>Tour</span><span class="bub right" style="top:83.23%"><b>3</b>Reference</span><span class="bub right" style="top:88.77%"><b>4</b>Manual</span><span class="bub right" style="top:94.31%"><b>5</b>Licences</span></span>
   </div>
   <figcaption><ol class="legend">
-    <li><b>Examples.</b> Eleven complete sheets. Each opens as a new, unsaved sheet named “Example: …” and is solved.</li>
+    <li><b>Examples.</b> Eleven complete sheets, whose comments explain each step. Each opens as a new, unsaved sheet named “Example: …” and is solved.</li>
     <li><b>Tour.</b> Eight steps, each highlighting one part of the window. Esc ends the tour.</li>
     <li><b>Reference.</b> The language reference, in a pane beside the current panes.</li>
     <li><b>Manual.</b> This manual, in the web browser.</li>
+    <li><b>Licences.</b> The components by other authors that Dome is built on, each with its version, copyright and licence.</li>
   </ol></figcaption>
 </figure>
 <ul>
-  <li><strong>Examples:</strong> eleven complete sheets whose comments explain each step: a first sheet of equations and units, states of water, a Rankine cycle, vapor-compression refrigeration with R-134a, a gas turbine, the Rankine cycle swept over turbine inlet temperature, moist air cooled with dehumidification, a heat exchanger between R-134a and water, a tank filled from a steam line, the maximum performance of a refrigerator, and the entropy produced in a hot-water tank fed by a steam line. The sweep example opens in the Sweep view and runs.</li>
-  <li><strong>Take the tour:</strong> the view tabs, the sheet, the results, the figure, the Workspace, the pane controls, the File menu and the Help menu, one at a time. When the sheet is empty, the tour opens the Rankine example first.</li>
-  <li><strong>Reference:</strong> the sheet language, in a pane beside the current panes. The same reference is at the end of <a href="sheet.html#reference">Writing a sheet</a>.</li>
-  <li><strong>Manual:</strong> this manual, in the web browser.</li>
-  <li><strong>Licences:</strong> the components by other authors that Dome is built on, each with its version, copyright and licence, among them the Rust crates of the desktop app.</li>
+  <li>The examples run from a first sheet of equations and units to the entropy produced in a hot-water tank. The Sweeps example opens in the Sweep view and runs. The <a href="examples.html">Examples</a> page lists all eleven.</li>
+  <li>The tour shows the view tabs, the sheet, the results, the figure, the Workspace, the pane controls and the two menus. When the sheet is empty, it opens the Rankine cycle example first.</li>
+  <li>The text of the Reference pane also ends the <a href="reference.html#pane">Reference</a> page.</li>
 </ul>
 
-<h2>Updates</h2>
-<p>A few seconds after launch, Dome asks whether a newer version has been published. When one has, a bar under the header offers it. Nothing is downloaded until Update and restart is selected. Dome verifies the download, installs it and restarts with the same sheets open. File › Check for updates asks again at any time.</p>
+<h2 id="updates">Updating Dome</h2>
+<ol class="steps">
+  <li>A few seconds after launch, Dome asks whether a newer version has been published. When one has, a bar under the header offers it.</li>
+  <li>Select Update and restart. Nothing is downloaded before this.</li>
+</ol>
 <figure class="shot wl" style="--fw:1200;--fwpx:1200px;--nwpx:836px;--ar:1200/100.5;--il:16.83%;--it:24.01%;--iw:66.33%">
   <div class="frame">
     <svg class="leaders" viewBox="0 0 1200 100.5" aria-hidden="true"><line x1="168" y1="44.25" x2="198.22" y2="61.44"/><line x1="168" y1="81.75" x2="828.2" y2="82.02"/><line x1="1032" y1="73" x2="909.3" y2="82.02"/><line x1="1032" y1="26.75" x2="1001.78" y2="61.44"/></svg>
@@ -104,11 +111,15 @@
   <figcaption><ol class="legend">
     <li><b>The new version.</b> The version offered and the version installed.</li>
     <li><b>What changed.</b> The release notes of the new version.</li>
-    <li><b>Update and restart.</b> Downloads the new version, installs it and restarts Dome with the same sheets open.</li>
+    <li><b>Update and restart.</b> Downloads the new version, verifies it, installs it and restarts Dome with the same sheets open.</li>
     <li><b>Later.</b> Hides the bar until the next launch.</li>
   </ol></figcaption>
 </figure>
-<p>The MATLAB toolbox has its own update check; see <a href="toolbox.html#updates">The MATLAB toolbox</a>.</p>
+<ol>
+  <li>File › Check for updates asks again at any time.</li>
+  <li>When an update fails, the bar gives the reason, and the copy of Dome installed stays as it was.</li>
+  <li>The MATLAB toolbox has an update check of its own; see <a href="toolbox.html#updates">The MATLAB toolbox</a>.</li>
+</ol>
 </main>
 <nav class="pager" aria-label="Pages"><a class="prev" href="index.html"><span>Previous</span>Dome manual</a><a class="next" href="sheet.html"><span>Next</span>Writing a sheet</a></nav>
 <footer class="site">ENES232 Thermodynamics · <a href="../index.html">Download Dome</a> · <a href="https://ealtabet-teaching.github.io/enes232/">Course site</a></footer>
