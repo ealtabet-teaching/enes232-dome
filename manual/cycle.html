@@ -89,7 +89,7 @@ eta_t = 0.86           % turbine isentropic efficiency</code></pre>
 <p>A given value shows nothing at the right of its line, since the line states it. The Workspace lists each one with its unit.</p>
 <ol>
   <li>A line <code>name = number [unit]</code> is an input of the sheet. A number written in a state line is one too: the <code>x = 0</code> of state 3 makes x_3 an input.</li>
-  <li>An efficiency is a plain number with no unit. Write 0.86, not 86; <a href="#refuses">When Dome refuses</a> shows what 86 gives.</li>
+  <li>An efficiency is a plain number with no unit. Write 0.86, not 86; <a href="#refuses">Errors and warnings</a> shows what 86 gives.</li>
   <li>An input can be swept over a range of values (see <a href="sweeps.html">Sweeps</a>). Some inputs can also be dragged on a diagram, as <a href="#diagram">the T–s diagram</a> shows.</li>
 </ol>
 
@@ -209,7 +209,7 @@ plot Ts : 1 -s- 2 -p- 3 -s- 4 -p- 1</code></pre>
   <li>To follow a result over a whole range of T_1, run a sweep. <a href="sweeps.html">Sweeps</a> starts from this sheet.</li>
 </ol>
 
-<h2 id="refuses">When Dome refuses</h2>
+<h2 id="refuses">Errors and warnings</h2>
 <p>Each entry changes or deletes one line of the Rankine example. It shows the line as changed, the message Dome shows, and what to change.</p>
 
 <h3>A sheet with no fluid line</h3>

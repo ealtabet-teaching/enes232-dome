@@ -39,7 +39,7 @@ check T_4 &gt; T_1</code></pre>
   <li><code>state 4 (water) : p = p_w, h = h_4</code> gives state 4 an h the sheet has not found yet. The balance finds h_4, and Dome then fixes state 4 from p_w and h_4.</li>
   <li>The fluids share one set of labels, so each state needs a label of its own. A second state 1, of either fluid, is an error.</li>
   <li>The States tab has a Fluid column when the states are of more than one fluid. Here it shows R-134a for states 1 and 2 and water for states 3 and 4.</li>
-  <li>A state line that names no fluid takes the sheet's. Without <code>(water)</code>, state 3 is R-134a at 1 bar and 15 °C, a superheated vapor. <a href="#refuses">When Dome refuses</a>, below, shows the message and the States tab.</li>
+  <li>A state line that names no fluid takes the sheet's. Without <code>(water)</code>, state 3 is R-134a at 1 bar and 15 °C, a superheated vapor. <a href="#refuses">Errors and warnings</a>, below, shows the message and the States tab.</li>
   <li>The streams flow in opposite directions. The water entering (3) meets the refrigerant leaving (2), and the water leaving (4) meets the refrigerant entering (1).</li>
   <li>Heat flows from the warmer fluid to the colder one at each end, so both checks must pass. With <code>m_dot_r = 0.2 [kg/s]</code>, T_4 = 1.9679 °C and the second check fails.</li>
 </ol>
@@ -61,7 +61,7 @@ T_4 = T(water, p = p_w, h = h_4)</code></pre>
   <li>Each stream keeps its own mass flow rate.</li>
   <li>A plot line needs state lines. Added to this sheet, <code>plot Ts : 1 -p- 2</code> draws no states, and the figure shows "no state 1, 2 in the sheet".</li>
   <li>The form <code>m_dot_r*h_1 + m_dot_w*h_3 = m_dot_r*h_2 + m_dot_w*h_4</code> also works, since each fluid has a term on each side. It gives the same h_4.</li>
-  <li>A difference of h between two fluids, such as <code>h_3 - h_2</code>, is an error. <a href="#refuses">When Dome refuses</a>, below, shows it.</li>
+  <li>A difference of h between two fluids, such as <code>h_3 - h_2</code>, is an error. <a href="#refuses">Errors and warnings</a>, below, shows it.</li>
 </ol>
 
 <h2 id="diagrams">One diagram per fluid</h2>
@@ -83,7 +83,7 @@ plot Ts : 3 -p- 4</code></pre>
   <li><a href="states.html#diagrams">States and diagrams</a> gives the diagrams and paths.</li>
 </ol>
 
-<h2 id="refuses">When Dome refuses</h2>
+<h2 id="refuses">Errors and warnings</h2>
 <p>Each entry gives a sheet, the message Dome shows for it, and what to change.</p>
 
 <h3>An h of one fluid less an h of another</h3>

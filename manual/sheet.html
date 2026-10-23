@@ -62,13 +62,17 @@ T_m = (T_1 + T_2)/2
 r   = T_2 / T_1</code></pre>
 <p>Dome gives dT = 53 K, T_a = 47 °C, T_m = 53.5 °C and r = 1.1766.</p>
 <ol>
-  <li>A number in <code>[C]</code> or <code>[F]</code> is a temperature. A number in <code>[K]</code> or <code>[R]</code> is a temperature or a change, as the equations use it.</li>
-  <li>Write a change in temperature in <code>[K]</code> or <code>[R]</code>: <code>T_1 + 20 [K]</code> is 20 K above T_1.</li>
-  <li>Dome holds every temperature in kelvin, so <code>T_2 / T_1</code> is a ratio of absolute temperatures. Use T_1 itself in every equation, never <code>T_1 + 273.15 [K]</code>.</li>
+  <li>A number in <code>[C]</code> or <code>[F]</code> is a temperature. A number in <code>[K]</code> or <code>[R]</code> inside a sum is a change. A temperature in kelvin gets a line of its own: <code>T_0 = 300 [K]</code>.</li>
+  <li>To start from a temperature in kelvin inside a state line or a sum, give it a line of its own:
+<pre><code>T_0 = 300 [K]
+T = T_0 + dT</code></pre></li>
+  <li>Write a change in temperature in <code>[K]</code> or <code>[R]</code>: <code>T_1 + 20 [K]</code> is 20 K above T_1. Beside a change it is a change, so <code>T_2 - T_1 + 5 [K]</code> is 5 K more than the rise.</li>
+  <li>Dome holds every temperature in kelvin, so <code>T_2 / T_1</code> is a ratio of absolute temperatures. Use T_1 itself in every equation. Dome asks about <code>T_1 + 273.15 [K]</code>; see <a href="#hand-conversion">below</a>.</li>
   <li>A difference of two temperatures is a change, shown in K. An average, such as <code>(T_1 + T_2)/2</code>, is a temperature. Dome refuses a plain sum, <code>T_1 + T_2</code>.</li>
   <li>In a sum or difference, write a <code>[C]</code> or <code>[F]</code> number in parentheses: <code>(25 [C]) + dT</code>. Without them, Dome cannot tell a temperature from a change.</li>
   <li>A name makes no difference: <code>dT = 10 [C]</code> is the temperature 10 °C. A change of 10 K is <code>dT = 10 [K]</code>.</li>
-  <li>Dome shows a value in °C only where it is certainly a temperature, such as the T of a state. Other values are shown in K, as T_2 is in the first sheet.</li>
+  <li>Dome shows every temperature in the unit the sheet's temperature givens use most, such as <code>T_1 = 300 [K]</code> or a number in a state line. Numbers in sums do not count. On a tie, or with none, it uses °C.</li>
+  <li>A given in another unit is shown in the sheet's unit, so <code>T_1 = 300 [K]</code> among two <code>[C]</code> givens is 26.85 °C. A change, and a value the equations leave open, is shown in K.</li>
   <li>On an English sheet, °F and °R take the places of °C and K.</li>
 </ol>
 
@@ -118,7 +122,7 @@ Q = W + dU</code></pre>
   <li>A message that names an exact rewrite has a button for it, under the message in the sheet and in the Problems tab. The button makes the rewrite as one edit, which <kbd>⌘</kbd><kbd>Z</kbd> undoes.</li>
   <li>A message with two rewrites, one for each reading of the line, offers both and makes neither. Press <kbd>⌘</kbd><kbd>.</kbd> to make the rewrite at the cursor, or to open the choice when there are two.</li>
 </ol>
-<p><a href="#refuses">When Dome refuses</a>, below, gives the messages a new sheet meets most often. The <a href="reference.html#rewrites">Reference</a> page lists every rewrite.</p>
+<p><a href="#refuses">Errors and warnings</a>, below, gives the messages a new sheet meets most often. The <a href="reference.html#rewrites">Reference</a> page lists every rewrite.</p>
 
 <h2 id="checks">Checks and starting values</h2>
 <h3>Checking a result</h3>
@@ -209,8 +213,8 @@ c_p = der(h(water, p = 1 [bar], T = T), T, 50 [C])</code></pre>
   <li>A limit, the point or a variable in e may be an unknown. With <code>W = -15 [kJ]</code> given in place of V_2, the integral line finds V_2 = 0.028981 m³.</li>
 </ol>
 
-<h2 id="refuses">When Dome refuses</h2>
-<p>Each entry gives a sheet, the message Dome shows for it, and what to change. The messages a new sheet meets most often come first.</p>
+<h2 id="refuses">Errors and warnings</h2>
+<p>Each entry gives a sheet, the message Dome shows for it, and what to change. Errors come first, then warnings, each with the messages a new sheet meets most often first.</p>
 
 <h3>A number without a unit</h3>
 <pre class="refused"><code>T_H = 500 [C]
@@ -242,25 +246,12 @@ T_a = T_1 + 20 [C]</code></pre>
 <p class="msg">a [C] number in a sum or difference could be a temperature or a change in temperature: write a change as 20 [K], or the temperature in parentheses, (20 [C])</p>
 <p>For 20 K above T_1, write <code>20 [K]</code>; the button <strong>Write a change as 20 [K]</strong> does it. Where both readings fit, as in <code>25 [C] + dT</code>, the message has a button for each. Choose the one the sheet means.</p>
 
-<h3 id="hand-conversion">A temperature converted to kelvin by hand</h3>
-<pre class="refused"><code>T_1 = 27 [C]
-T_K = T_1 + 273.15 [K]</code></pre>
-<p class="msg">T_1 is already an absolute temperature: Dome holds every temperature in kelvin and converts [C] and [F] as it reads them, so adding 273.15 [K] counts the offset twice; use T_1 itself</p>
-<p>Use T_1 wherever the sheet uses T_K. The button <strong>Remove + 273.15 [K]</strong> leaves <code>T_K = T_1</code>.</p>
-
 <h3 id="temperature-or-change">A temperature where a change belongs, or the reverse</h3>
 <pre class="refused"><code>T_1 = 27 [C]
 T_2 = 80 [C]
 T_s = T_1 + T_2</code></pre>
 <p class="msg">T_2 is a temperature, and this adds it to another temperature; write a change in [K]</p>
 <p>For the mean temperature, write <code>(T_1 + T_2)/2</code>; for the change, <code>T_2 - T_1</code>. The reverse slip is a [C] number given for a change: Dome refuses <code>T_2 - T_1 = 30 [C]</code>, and its button writes <code>30 [K]</code>.</p>
-
-<h3>A result in a unit no quantity has</h3>
-<pre class="refused"><code>W_net = 100
-h_1 = 300 [kJ/kg]; h_2 = 250 [kJ/kg]
-W_net = mdot*(h_1 - h_2)</code></pre>
-<p class="msg">mdot is in s^2/m^2, a unit no usual quantity has; it depends on W_net, which is given without a unit, so check whether W_net needs one</p>
-<p>A number without a unit where no equation requires one is a plain number, so mdot came out in s²/m². Write the unit: with <code>W_net = 100 [kW]</code>, Dome gives mdot = 2 kg/s.</p>
 
 <h3>A check written with =</h3>
 <pre class="refused"><code>x = 3
@@ -281,6 +272,26 @@ u_2 = interp(sat, u_g, T = 20 [C])</code></pre>
 stat 1 : p = 1 [bar], x = 1</code></pre>
 <p class="msg">expected "=" but found "1"</p>
 <p>Dome read <code>stat</code> as the name of a variable, so it expected an equation. Correct the spelling to <code>state</code>. The <a href="reference.html#keywords">Reference</a> page lists the keywords.</p>
+
+<p>The entries below are warnings. The sheet solves, and the warning asks about one line.</p>
+
+<h3 id="hand-conversion">A temperature converted to kelvin by hand</h3>
+<pre><code>T_1 = 27 [C]
+T_K = T_1 + 273.15 [K]</code></pre>
+<p class="msg">T_1 is already in kelvin. Keep the + 273.15 [K]?</p>
+<ol>
+  <li>T_1 is already in kelvin. Dome converts every <code>[C]</code> and <code>[F]</code> value as it reads it, so a sheet never needs <code>+ 273.15</code>.</li>
+  <li><strong>Remove + 273.15 [K]</strong> leaves <code>T_K = T_1</code>. That is right when the line was a conversion.</li>
+  <li><strong>Keep + (273.15 [K])</strong> writes the parentheses, read as a rise of 273.15 K, so T_K is 300.15 °C. That is right only when the problem adds 273.15 K.</li>
+  <li>It is a warning because the line is valid arithmetic. Dome cannot know which was meant, so it asks. A published report lists it until the sheet chooses.</li>
+</ol>
+
+<h3>A result in a unit no quantity has</h3>
+<pre><code>W_net = 100
+h_1 = 300 [kJ/kg]; h_2 = 250 [kJ/kg]
+W_net = mdot*(h_1 - h_2)</code></pre>
+<p class="msg">mdot is in s^2/m^2, a unit no usual quantity has; it depends on W_net, which is given without a unit, so check whether W_net needs one</p>
+<p>A number without a unit where no equation requires one is a plain number, so mdot came out in s²/m². Write the unit: with <code>W_net = 100 [kW]</code>, Dome gives mdot = 2 kg/s.</p>
 
 <h2 id="math-view" class="lookup">The Math view</h2>
 <p>The Math view shows the sheet typeset as equations, with the value of each line. The first example's shot above shows it in place of the figure.</p>
