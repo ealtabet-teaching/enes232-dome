@@ -120,7 +120,8 @@ Q = W + dU</code></pre>
   <li>The Problems tab lists each error and warning with its line number and message. A click on one moves the cursor to its line.</li>
   <li>Each message has an Explain button, which opens the section of this manual that gives its rule.</li>
   <li>A message that names an exact rewrite has a button for it, under the message in the sheet and in the Problems tab. The button makes the rewrite as one edit, which <kbd>⌘</kbd><kbd>Z</kbd> undoes.</li>
-  <li>A message with two rewrites, one for each reading of the line, offers both and makes neither. Press <kbd>⌘</kbd><kbd>.</kbd> to make the rewrite at the cursor, or to open the choice when there are two.</li>
+  <li>A message with two rewrites, one for each reading of the line, offers both and makes neither. Press <kbd>⌘</kbd><kbd>.</kbd> to open the choice.</li>
+  <li><kbd>⌘</kbd><kbd>.</kbd> makes a rewrite itself only where the line has no other reading, as <code>==</code> for <code>=</code> in a check line. A rewrite that names a unit, or that chooses one reading, is made only by its button.</li>
 </ol>
 <p><a href="#refuses">Errors and warnings</a>, below, gives the messages a new sheet meets most often. The <a href="reference.html#rewrites">Reference</a> page lists every rewrite.</p>
 
@@ -136,7 +137,7 @@ check V_2 &gt; V_1</code></pre>
   <li>A <code>check</code> line compares two expressions after the sheet is solved. The comparisons are <code>==</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;</code> and <code>&gt;</code>.</li>
   <li>The result appears at the right of the line and under the Checks tab.</li>
   <li>The two sides need units that match, as in an equation: <code>check T_1 &gt; 300</code> needs a unit after the 300.</li>
-  <li>Dome does not evaluate a check line that has an error on it.</li>
+  <li>Dome does not evaluate a check line that has an error on it. Nor does it evaluate one whose values come from a line with an error, directly or through other lines; the check names that line.</li>
 </ol>
 
 <h3 id="two-answers">Choosing between two answers</h3>
@@ -213,6 +214,24 @@ c_p = der(h(water, p = 1 [bar], T = T), T, 50 [C])</code></pre>
   <li>A limit, the point or a variable in e may be an unknown. With <code>W = -15 [kJ]</code> given in place of V_2, the integral line finds V_2 = 0.028981 m³.</li>
 </ol>
 
+<h2 id="transient">Transient problems</h2>
+<p>A transient problem asks how a value changes with time. This sheet finds the water level in a filling tank at time t_1, from the rate equation in its first comment.</p>
+<pre><code>% rho*A*dL/dt = m_dot_i - c*L: water flows in at m_dot_i and drains at c*L
+% so dt = rho*A*dL/(m_dot_i - c*L), from L = 0 at t = 0
+m_dot_i = 30 [lb/s]
+c = 9 [lb/s/ft]
+rho = 62.4 [lb/ft^3]
+A = 3 [ft^2]
+t_1 = 50 [s]
+t_1 = integral(rho*A/(m_dot_i - c*L), L, 0 [ft], L_1)</code></pre>
+<p>Dome gives L_1 = 3.0321 ft.</p>
+<ol>
+  <li>Dome takes derivatives of expressions. It does not solve differential equations.</li>
+  <li>A first-order equation dy/dt = f(y) gives dt = dy/f(y). Write <code>t_1 - t_0 = integral(1/f(y), y, y_0, y_1)</code>, and Dome finds y_1, the value at t_1.</li>
+  <li>For the value at several times, sweep t_1.</li>
+  <li>A <code>der()</code> whose expression does not contain its variable is 0, so Dome refuses it. An example is <code>der(L, t, t_1)</code> with L a variable of the sheet.</li>
+</ol>
+
 <h2 id="refuses">Errors and warnings</h2>
 <p>Each entry gives a sheet, the message Dome shows for it, and what to change. Errors come first, then warnings, each with the messages a new sheet meets most often first.</p>
 
@@ -222,6 +241,14 @@ T_L = 25
 eta = 1 - T_L/T_H</code></pre>
 <p class="msg">this number needs a unit: by the equation on line 3, T_L is a temperature, so write e.g. 25 [C] or 25 [K]</p>
 <p>Write the unit you meant. The buttons <strong>Write 25 [C]</strong> and <strong>Write 25 [K]</strong> write either one; the two give different values of eta.</p>
+
+<h3>A given without a unit in a units error</h3>
+<pre class="refused"><code>h_1 = 300 [kJ/kg]
+T_1 = 300 [K]; T_2 = 350 [K]
+cp = 1.005
+h_2 = h_1 + cp*(T_2 - T_1)</code></pre>
+<p class="msg">units do not match: kJ/kg + K; for them to match, cp would be in kJ/(kg·K)</p>
+<p>A number given without a unit is a plain number, so <code>cp*(T_2 - T_1)</code> is in K. The message says what cp would be for the units to match. Write the unit on the cp line: <code>cp = 1.005 [kJ/(kg*K)]</code> gives h_2 = 350.25 kJ/kg. No button writes it, since the slip may be another unit, such as kJ written for kW.</p>
 
 <h3>Units that do not match</h3>
 <pre class="refused"><code>mdot = 2 [kg/s]
@@ -267,6 +294,13 @@ u_2 = interp(sat, u_g, T = 20 [C])</code></pre>
 <p class="msg">T = 20 [C] is outside table sat, whose T runs from 12 to 16 [C]</p>
 <p>Add rows on both sides of the key, or check the value of the key.</p>
 
+<h3>A differential equation written with der()</h3>
+<pre class="refused"><code>m_dot_i = 30 [lb/s]; c = 9 [lb/s/ft]
+rho = 62.4 [lb/ft^3]; A = 3 [ft^2]; t_1 = 50 [s]
+rho*A*der(L, t, t_1) = m_dot_i - c*L</code></pre>
+<p class="msg">der() of this expression is 0 for every t: the expression does not contain t. Dome takes derivatives of expressions and does not solve differential equations; for dy/dt = f(y), write t_1 - t_0 = integral(1/f(y), y, y_0, y_1) and solve it for y_1</p>
+<p>L is one value of the sheet, so its derivative with respect to t is 0. Write the equation as an integral for the time, as in <a href="#transient">Transient problems</a>.</p>
+
 <h3>A misspelled keyword</h3>
 <pre class="refused"><code>fluid water
 stat 1 : p = 1 [bar], x = 1</code></pre>
@@ -284,6 +318,17 @@ T_K = T_1 + 273.15 [K]</code></pre>
   <li><strong>Remove + 273.15 [K]</strong> leaves <code>T_K = T_1</code>. That is right when the line was a conversion.</li>
   <li><strong>Keep + (273.15 [K])</strong> writes the parentheses, read as a rise of 273.15 K, so T_K is 300.15 °C. That is right only when the problem adds 273.15 K.</li>
   <li>It is a warning because the line is valid arithmetic. Dome cannot know which was meant, so it asks. A published report lists it until the sheet chooses.</li>
+</ol>
+
+<h3 id="unit-on-divisor">A unit on the divisor of a quotient</h3>
+<pre><code>R = 8.314/28.97 [kJ/kg/K]</code></pre>
+<p class="msg">a unit belongs to the number it follows, so this divides 8.314 by 28.97 [kJ/kg/K] and gives a value in s^2·K/m^2. Keep it?</p>
+<ol>
+  <li>A unit in brackets belongs to the number it follows, so the line divides by the unit too.</li>
+  <li>Dome asks for a gas constant's unit, energy per mass per temperature. For another unit it asks only where the rest of the sheet needs the name in that unit. <code>R_t = 1/25 [W/K]</code> is right as written, and has no warning.</li>
+  <li><strong>Write 8.314 [kJ/kg/K]/28.97</strong> puts the unit on the quotient, so R is 0.28699 kJ/(kg·K).</li>
+  <li><strong>Write 8.314 [kJ/kmol/K]/28.97 [kg/kmol]</strong> writes the gas constant as the universal gas constant over the molar mass, with the same value.</li>
+  <li><strong>Keep 8.314/(28.97 [kJ/kg/K])</strong> writes parentheses, which take the line as written.</li>
 </ol>
 
 <h3>A result in a unit no quantity has</h3>
@@ -306,7 +351,7 @@ W_net = mdot*(h_1 - h_2)</code></pre>
   <thead><tr><th>Keys</th><th>What they do</th></tr></thead>
   <tbody>
     <tr><td><kbd>⌘</kbd><kbd>Enter</kbd></td><td>Solve the sheet. In the sweep editor, run the sweep.</td></tr>
-    <tr><td><kbd>⌘</kbd><kbd>.</kbd></td><td>Make the rewrite that the problem at the cursor offers. Where it offers two, open them as a choice: the arrow keys move, <kbd>Enter</kbd> makes one and <kbd>Esc</kbd> closes the choice.</td></tr>
+    <tr><td><kbd>⌘</kbd><kbd>.</kbd></td><td>Make the rewrite that the problem at the cursor offers, when it is the only reading of the line. Otherwise open the rewrites as a choice: the arrow keys move, <kbd>Enter</kbd> makes one and <kbd>Esc</kbd> closes the choice.</td></tr>
     <tr><td><kbd>⌘</kbd><kbd>Z</kbd></td><td>Undo the last edit, a rewrite included.</td></tr>
     <tr><td><kbd>Ctrl</kbd><kbd>Space</kbd></td><td>Complete a name, unit or fluid. On macOS, where <kbd>Ctrl</kbd><kbd>Space</kbd> often switches the input source, <kbd>Option</kbd><kbd>`</kbd> does the same.</td></tr>
   </tbody>
