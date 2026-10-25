@@ -68,7 +68,7 @@ h(water, T = T_x, x = 0) = 100 [kJ/kg]</code></pre>
 <ol>
   <li>Write the fluid first, then two named properties: <code>h(water, p = p_b, x = 0)</code>.</li>
   <li>The functions are <code>p</code>, <code>T</code>, <code>v</code>, <code>u</code>, <code>h</code>, <code>s</code>, <code>x</code>, <code>cp</code>, <code>cv</code> and <code>rho</code>.</li>
-  <li><code>Tsat(water, p = …)</code> is the saturation temperature and <code>psat(water, T = …)</code> the saturation pressure. <code>M(water)</code> is the molar mass, 18.015 kg/kmol.</li>
+  <li><code>Tsat(water, p = …)</code> is the saturation temperature and <code>psat(water, T = …)</code> the saturation pressure. <code>M(water)</code> is the molar mass, 18.015 kg/kmol. <code>M()</code> also gives the molar mass of hydrogen, helium, argon, methane and the other substances of the Reference's list, which Dome has no states for.</li>
   <li>Each input needs the unit of its property, as in a state line: <code>h(water, T = 300, x = 0)</code> needs a unit after the 300.</li>
   <li>An unknown may be inside a call. The last line finds T_x, the temperature of saturated liquid water with h = 100 kJ/kg.</li>
   <li>For an ideal gas, <code>h</code>, <code>u</code>, <code>cp</code> and <code>cv</code> need T alone: <code>h(air, T = 300 [K])</code> is 300.17 kJ/kg. <code>s</code> needs p as well.</li>

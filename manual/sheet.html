@@ -322,7 +322,7 @@ T_K = T_1 + 273.15 [K]</code></pre>
 
 <h3 id="unit-on-divisor">A unit on the divisor of a quotient</h3>
 <pre><code>R = 8.314/28.97 [kJ/kg/K]</code></pre>
-<p class="msg">a unit belongs to the number it follows, so this divides 8.314 by 28.97 [kJ/kg/K] and gives a value in s^2·K/m^2. Keep it?</p>
+<p class="msg">a unit belongs to the number it follows, so this divides 8.314 by 28.97 [kJ/kg/K] and gives a value in kg·K/kJ. Keep it?</p>
 <ol>
   <li>A unit in brackets belongs to the number it follows, so the line divides by the unit too.</li>
   <li>Dome asks for a gas constant's unit, energy per mass per temperature. For another unit it asks only where the rest of the sheet needs the name in that unit. <code>R_t = 1/25 [W/K]</code> is right as written, and has no warning.</li>
@@ -335,7 +335,7 @@ T_K = T_1 + 273.15 [K]</code></pre>
 <pre><code>W_net = 100
 h_1 = 300 [kJ/kg]; h_2 = 250 [kJ/kg]
 W_net = mdot*(h_1 - h_2)</code></pre>
-<p class="msg">mdot is in s^2/m^2, a unit no usual quantity has; it depends on W_net, which is given without a unit, so check whether W_net needs one</p>
+<p class="msg">mdot is in kg/kJ, a unit no usual quantity has; it depends on W_net, which is given without a unit, so check whether W_net needs one</p>
 <p>A number without a unit where no equation requires one is a plain number, so mdot came out in s²/m². Write the unit: with <code>W_net = 100 [kW]</code>, Dome gives mdot = 2 kg/s.</p>
 
 <h2 id="math-view" class="lookup">The Math view</h2>
