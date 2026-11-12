@@ -59,7 +59,7 @@
     <li><b>Units of the results.</b> SI or English units for the values Dome shows.</li>
     <li><b>Layouts.</b> The sheet alone; the sheet and a figure; or files, sheet, figure and results.</li>
     <li><b>Sheet, Sweep, Publish.</b> The three views: the sheet, a sweep of one or two inputs, and the report.</li>
-    <li><b>File menu.</b> New, Open, Save, Save as, Save as template, and the exports.</li>
+    <li><b>File menu.</b> New, Open, Save, Save as, Save as template, the exports, and Settings.</li>
     <li><b>Help menu.</b> The examples, the tour, the language reference, this manual and the licences.</li>
     <li><b>Files.</b> New, Open, Save and Save as, and the list of open sheets.</li>
     <li><b>Workspace.</b> Every variable of the sheet with its value and unit, then the state properties.</li>
@@ -74,6 +74,7 @@
   <li>The menu shows the sheet, Math, a figure, the results, the Workspace, Files, a sweep or Reference in the pane.</li>
   <li>The bar between two panes resizes them.</li>
   <li>On macOS, keyboard shortcuts use <kbd>⌘</kbd>; on Windows and Linux they use <kbd>Ctrl</kbd>.</li>
+  <li>File › Settings sets the theme and checks for updates; see <a href="#settings">Settings</a>.</li>
 </ol>
 
 <h2 id="help-menu" class="lookup">The Help menu</h2>
@@ -97,6 +98,25 @@
   <li>The text of the Reference pane also ends the <a href="reference.html#pane">Reference</a> page.</li>
 </ul>
 
+<h2 id="settings" class="lookup">Settings</h2>
+<p>File › Settings opens the Settings pane beside the current panes. <kbd>⌘</kbd><kbd>,</kbd> on macOS and <kbd>Ctrl</kbd><kbd>,</kbd> on Windows and Linux open it too. The units of the results and Auto-solve stay in the header.</p>
+<figure class="shot wm" style="--fw:729;--fwpx:729px;--nwpx:365px;--ar:729/409;--il:27.71%;--it:5.38%;--iw:44.58%">
+  <div class="frame">
+    <svg class="leaders" viewBox="0 0 729 409" aria-hidden="true"><line x1="561" y1="201.61" x2="521" y2="201.61"/><line x1="168" y1="358.22" x2="208.44" y2="358.22"/></svg>
+    <div class="img"><a href="img/settings.png"><img src="img/settings.png" width="325" height="365" alt="The Settings pane at the right of the window: under Theme the choices Light, Dark and System, and under Updates the version of Dome and the button Check for updates."></a><span class="mks" aria-hidden="true"><span class="mk right" style="left:94.46%;top:49.21%">1</span><span class="mk left" style="left:5.67%;top:92.11%">2</span></span></div>
+    <span class="bubs" aria-hidden="true"><span class="bub right" style="top:49.29%"><b>1</b>Theme</span><span class="bub left" style="top:87.58%"><b>2</b>Updates</span></span>
+  </div>
+  <figcaption><ol class="legend">
+    <li><b>Theme.</b> Light or dark for the window. System follows the computer’s setting.</li>
+    <li><b>Updates.</b> Asks whether a newer version of Dome has been published.</li>
+  </ol></figcaption>
+</figure>
+<ul>
+  <li>Theme sets the window light or dark. System, the default, follows the computer's setting. Exported and copied figures, reports and MATLAB scripts keep the light colors in either theme.</li>
+  <li>Updates shows the version of Dome. In the desktop app, Check for updates asks whether a newer version has been published; see <a href="#updates">Updating Dome</a>.</li>
+  <li>Close pane, at the right of the pane's header, closes it.</li>
+</ul>
+
 <h2 id="updates">Updating Dome</h2>
 <ol class="steps">
   <li>A few seconds after launch, Dome asks whether a newer version has been published. When one has, a bar under the header offers it.</li>
@@ -116,7 +136,7 @@
   </ol></figcaption>
 </figure>
 <ol>
-  <li>File › Check for updates asks again at any time.</li>
+  <li>Check for updates, in File › Settings, asks again at any time.</li>
   <li>When an update fails, the bar gives the reason, and the copy of Dome installed stays as it was.</li>
   <li>The MATLAB toolbox has an update check of its own; see <a href="toolbox.html#updates">The MATLAB toolbox</a>.</li>
 </ol>
